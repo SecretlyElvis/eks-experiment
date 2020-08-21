@@ -1,0 +1,74 @@
+#!/bin/sh
+###########################################
+#   T E R R A F O R M   L A U N C H E R   #
+# Maintainer:  Daniel Auld, Watercare LTD #
+#                                         #
+# Script standardizes Terraform execution #
+# with command-line arguments.  Designed  #
+# for use in Docker containers or via CLI #
+###########################################
+
+CMD=${1:---help}
+ENV=${2:-BAU_DEV}
+DIR=${3:-WSL_Global_Roles}
+
+# Uncomment the following lines to enable debugging
+# export TF_LOG=DEBUG
+# export TF_LOG_PATH=./tflog
+
+
+if [ "$#" -ne 3 ]; then
+    echo "
+        Usage:
+          $0 <Terraform command> <Target AWS Account> <Configuration Directory>
+
+	Where:
+	   * Terraform command == init|plan|apply|destroy|*
+	   * Target AWS Account == AWS_DEV|BAU_DEV|BAU_QA|BAU_UAT|BAU_PRD|CICD_PRD
+	   * Configuration Directory == Configuration set, such as 'WSL_Global_Roles'
+	
+        Example: 
+         $0 init BAU_DEV WSL_Global_Roles"
+    exit 0
+fi
+
+
+
+echo "Execution Start..."
+echo "- Terraform command:  $CMD"
+echo "- Target Environment:  $ENV"
+echo "- Configuration Set:  $DIR"
+echo ""
+
+case $CMD in
+    init)
+	terraform init -input=false -backend=true -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -backend-config=./Env_State/$ENV.tfvars $DIR
+        ;;
+
+    plan)
+	terraform plan -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State//$ENV.tfvars $DIR
+	;;
+
+    apply)
+	terraform apply -auto-approve -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State/$ENV.tfvars $DIR
+	;;
+
+    destroy)
+	terraform destroy -auto-approve -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State/$ENV.tfvars $DIR
+	;;
+
+    *)
+        read -p "Are you sure you want to run Terraform with command '$CMD' [Y/N]?" yn
+            case $yn in
+            [Yy]* ) 
+	        terraform $CMD -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State/$ENV.tfvars $DIR
+		;;
+            [Nn]* ) 
+		exit
+		;;
+            * ) echo "Please answer Yes or No.";;
+        esac
+esac
+
+echo "Complete"
+exit 0

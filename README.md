@@ -12,13 +12,25 @@ Prerequisites
 S3 bucket for state files (saved in <FILE>)
 
 ## Utilizing this Repo
-
 Change to directory just above 'eks-experiment'
 
-Run Docker container
+** Run Docker Container with Terraform 13 / Kubectl / AWS CLI **
 docker run -u 1000:1000 -v $(pwd)/eks-experiment:/opt/app/eks -it secretlyelvis/tf-k8s-aws:T13
 
-** Docker Container with Terraform 13 / Kubectl / AWS CLI **
-tf-run init
+** Initialize AWS Credentials **
+aws configure set aws_access_key_id "<ACCESS_KEY>"
+aws configure set aws_secret_access_key "<SECRET_KEY>"
+aws configure set default.region "ap-southeast-2"
 
+** Change to Code Directory and Initialize Terraform **
+cd eks
+./tf-run init aws
+./tf-run plan aws
+./tf-run apply
+
+Install the EFS CSI driver into the cluster
+
+./tf-run init k8s
+./tf-run plan k8s
+./tf-run apply
 

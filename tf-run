@@ -9,59 +9,55 @@
 ###########################################
 
 CMD=${1:---help}
-ENV=${2:-BAU_DEV}
-DIR=${3:-WSL_Global_Roles}
+DIR=${2:-aws}
+planfile="eks-experiment.tfplan"
 
 # Uncomment the following lines to enable debugging
-# export TF_LOG=DEBUG
-# export TF_LOG_PATH=./tflog
+export TF_LOG=TRACE
+export TF_LOG_PATH=./tflog
 
-
-if [ "$#" -ne 3 ]; then
+if [ "$#" -lt 1 ]; then
     echo "
         Usage:
-          $0 <Terraform command> <Target AWS Account> <Configuration Directory>
+          $0 <Terraform command> <Dir>
 
 	Where:
 	   * Terraform command == init|plan|apply|destroy|*
-	   * Target AWS Account == AWS_DEV|BAU_DEV|BAU_QA|BAU_UAT|BAU_PRD|CICD_PRD
-	   * Configuration Directory == Configuration set, such as 'WSL_Global_Roles'
+           * Dir == Terraform configuration directory to execute
 	
         Example: 
-         $0 init BAU_DEV WSL_Global_Roles"
+         $0 init aws"
     exit 0
 fi
 
-
-
 echo "Execution Start..."
 echo "- Terraform command:  $CMD"
-echo "- Target Environment:  $ENV"
-echo "- Configuration Set:  $DIR"
+echo "- Config directory:  $DIR"
 echo ""
 
 case $CMD in
     init)
-	terraform init -input=false -backend=true -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -backend-config=./Env_State/$ENV.tfvars $DIR
+	terraform init -input=false -backend=true -backend-config=./backend.tfvars $DIR
         ;;
 
     plan)
-	terraform plan -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State//$ENV.tfvars $DIR
+	terraform plan -refresh=true "-out=${planfile}" $DIR
 	;;
 
     apply)
-	terraform apply -auto-approve -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State/$ENV.tfvars $DIR
+	terraform apply -auto-approve "./${planfile}"
+    rm "./${planfile}"
 	;;
 
     destroy)
-	terraform destroy -auto-approve -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State/$ENV.tfvars $DIR
+	terraform destroy -auto-approve -refresh=true $DIR
 	;;
 
     *)
         read -p "Are you sure you want to run Terraform with command '$CMD' [Y/N]?" yn
             case $yn in
             [Yy]* ) 
-	        terraform $CMD -var-file=./terraform.tfvars -var-file=./Env_Extra/$ENV-Extra.tfvars -var-file=./Env_State/$ENV.tfvars $DIR
+	        terraform $CMD $DIR
 		;;
             [Nn]* ) 
 		exit

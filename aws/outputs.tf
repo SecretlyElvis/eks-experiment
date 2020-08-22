@@ -27,3 +27,7 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = local.cluster_name
 }
+
+output "jenkins-fs_fsid" {
+  value = aws_efs_file_system.jenkins-fs.id
+}

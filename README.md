@@ -34,3 +34,10 @@ Install the EFS CSI driver into the cluster
 ./tf-run plan k8s
 ./tf-run apply
 
+### TODO
+
+- add NFS inbound rules to cluster security groups
+- EFS CSI driver install instructions
+- configuration of Jenkins
+- S3 bucket for Nexus
+- configuration for Nexus

@@ -16,7 +16,9 @@
 ## **Utilizing this Repo**
 Clone repo and change to directory just above `eks-experiment`
 1. **Run Docker Container with Terraform 13 / Kubectl / AWS CLI**
+
 `docker run -u 1000:1000 -v $(pwd)/eks-experiment:/opt/app/eks -it secretlyelvis/tf-k8s-aws:T13`
+
 2. **Initialize AWS Credentials**
 ```
 aws configure set aws_access_key_id "<ACCESS_KEY>"

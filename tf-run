@@ -13,8 +13,8 @@ DIR=${2:-aws}
 planfile="eks-experiment.tfplan"
 
 # Uncomment the following lines to enable debugging
-export TF_LOG=TRACE
-export TF_LOG_PATH=./tflog
+# export TF_LOG=TRACE
+# export TF_LOG_PATH=./tflog
 
 if [ "$#" -lt 1 ]; then
     echo "

@@ -52,6 +52,5 @@ In file 'pv.yml' replace "EFS_FSID" with output of 'jenkins-fs_fsid', then run:
 *Instructions TBD*
 
 ### TODO
-- [ ] Reference existing EKS cluster in k8s/ Terraform
 - [ ] configuration of Jenkins
 - [ ] configuration for Nexus

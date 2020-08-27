@@ -1,13 +1,6 @@
-# **CI/CD Stand-Alone Cluster in EKS**
+# **CI/CD Stand-Alone POC Cluster in EKS**
 
 ![Overview diagram](./images/Overview.jpeg)
-
-*Planned Components:*
-- Single Jenkins instance (will expand to 2 in final implementation)
-- EFS Mountpoint for Jenkins
-- Nexus Instance
-- S3 Bucket for Nexus object store (can also be EFS)
-- Jenkins/Nexus deployed via Helm Charts
 
 #### Prerequisites
 - S3 bucket for state files
@@ -17,7 +10,7 @@
 Clone repo and change to directory just above `eks-experiment`
 1. **Run Docker Container with Terraform 13 / Kubectl / AWS CLI**
 
-`docker run -u 1000:1000 -v $(pwd)/eks-experiment:/opt/app/eks -it secretlyelvis/tf-k8s-aws:T13`
+`docker run -u 1000:1000 -v $(pwd)/eks-experiment:/opt/app/eks -it secretlyelvis/tf-k8s-aws:v13`
 
 2. **Initialize AWS Credentials**
 ```
@@ -32,23 +25,25 @@ cd eks
 ./tf-run plan aws
 ./tf-run apply
 ```
-4. **Install the EFS CSI driver into the cluster**
+Record the 'cluster_name' and 'region' details from the Terraform output.  To review output again, enter:
 
-*Instructions TBD*
+`terraform output`
 
+4. **Configure kubectl and install EFS CSI driver**
+```
+aws eks --region <region> update-kubeconfig --name <cluster name>
+kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"
+```
 5. **Complete EKS Configuration**
 ```
 ./tf-run init k8s
 ./tf-run plan k8s
 ./tf-run apply
 ```
-6. **Install Jenkins and Nexus**
+6. **Deploy Jenkins and Nexus via Helm**
 
 *Instructions TBD*
 
 ### TODO
-- [ ] add NFS inbound rules to cluster security groups
-- [ ] EFS CSI driver install instructions
 - [ ] configuration of Jenkins
-- [ ] S3 bucket for Nexus
 - [ ] configuration for Nexus

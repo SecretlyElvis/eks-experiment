@@ -34,16 +34,24 @@ Record the 'cluster_name' and 'region' details from the Terraform output.  To re
 aws eks --region <region> update-kubeconfig --name <cluster name>
 kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"
 ```
-5. **Complete EKS Configuration**
+5. **Complete EKS Configuration -- Terraform Option**
 ```
+rm -rf .terraform
 ./tf-run init k8s
 ./tf-run plan k8s
 ./tf-run apply
 ```
-6. **Deploy Jenkins and Nexus via Helm**
+6. **Complete EKS Configuration -- Kubernetes Option**
+
+In file 'pv.yml' replace "EFS_FSID" with output of 'jenkins-fs_fsid', then run:
+
+`kubectl apply -f ./pv.yml`
+
+7. **Deploy Jenkins and Nexus via Helm**
 
 *Instructions TBD*
 
 ### TODO
+- [ ] Reference existing EKS cluster in k8s/ Terraform
 - [ ] configuration of Jenkins
 - [ ] configuration for Nexus

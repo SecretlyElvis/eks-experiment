@@ -31,3 +31,17 @@ output "cluster_name" {
 output "jenkins-fs_fsid" {
   value = aws_efs_file_system.jenkins-fs.id
 }
+
+# Outputs for Part II
+
+output "p2-host" {
+    value = data.aws_eks_cluster.cluster.endpoint
+}
+
+output "p2-token" {
+    value = data.aws_eks_cluster_auth.cluster.token
+}
+
+output "p2-ca-cert" {
+    value = data.aws_eks_cluster.cluster.certificate_authority.0.data
+}

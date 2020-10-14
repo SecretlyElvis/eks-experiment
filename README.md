@@ -54,3 +54,12 @@ In file 'pv.yml' replace "EFS_FSID" with output of 'jenkins-fs_fsid', then run:
 ### TODO
 - [ ] configuration of Jenkins
 - [ ] configuration for Nexus
+
+### SIX-WEEK PLAN
+
+Areas of Work:
+
+* Integration with testing platform 
+* Migration of existing pipelines from each of our CI technologies (GitHub Actions, CodeDeploy, TravisCI) 
+* Single Sign-On Integration
+* Automation of deployment (from scrath and with pre-existing EFS mounts) 

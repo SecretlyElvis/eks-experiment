@@ -7,7 +7,7 @@ metadata:
     heritage: {{.Release.Service | quote }}
     release: {{.Release.Name | quote }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
-    provider: "devopskube"
+    provider: "loyaltynz"
   annotations:
     kubernetes.io/tls-acme: "true"
 spec:

@@ -49,32 +49,12 @@ In file 'pv.yml' replace "EFS_FSID" with output of 'jenkins-fs_fsid', then run:
 
 7. **Deploy Jenkins and Nexus via Helm**
 
-# Jenkins in Kubernetes
-This repository has a `Dockerfile` and a `helm` chart for setting up a simple Jenkins master for running in Kubernetes.
-
-This Jenkins has the required tools to work in and with Kubernetes
-- Jenkins application with pre-loaded plugins (see [plugins.txt](plugins.txt))
-- Skipped setup wizard
-  - You can control admin user and password with `--set adminUser=${USER},adminPassword=${PASSWORD}`
-  - You can add and remove plugins by editing the [plugins.txt](plugins.txt) file
-
-
-### Build the Jenkins Docker image
-You can build the image yourself
-```bash
-
-# Build the image
-$ docker build -t anuphnu/jenkins:v0.0.1 .
-
-# Push the image
-$ docker push anuphnu/jenkins:v0.0.1
-```
+## Deploy Jenkins
 
 ### Deploy Jenkins helm chart to Kubernetes
 ```bash
 # Init helm and tiller on your cluster
 $ helm init
-$ kubectl apply -f rbac-config.yaml
 
 # Deploy the Jenkins helm chart
 # (same command for install and upgrade)
@@ -84,6 +64,52 @@ $ helm upgrade --install jenkins ./helm/jenkins-k8s
 ### Data persistence
 By default, in Kubernetes, the Jenkins deployment uses a persistent volume claim that is mounted to `/var/jenkins_home`.
 This assures your data is saved across crashes, restarts and upgrades.
+
+## Deploy Nexus
+
+## Variables
+To be able to use this package, the following variables should be set.
+see values.yaml
+
+## Chart Details
+This chart uses the docker image from [sonatype](https://github.com/sonatype/docker-nexus3).
+
+## Installing the chart
+
+## Configuration
+The following tables lists the configurable parameters of the Nexus chart and their default values.
+
+|Parameter|Description|Default|
+|---------|-----------|-------|
+|`hostName`|Host Name of this Instance|`nexus.example.com`|
+|`containerPort`|Port of the container|`8081`|
+|`maxMem`|Resource limit memory (-Xmx)|`1200M`|
+|`minMem`|Minimum Memory (-Xms)|`1200M`|
+|`javaOpts`|Additional options for the JVM|''|
+|`persistence.path`|Path where all data on the host is stored|`/data/nexus`|
+
+Specify each parameter using the --set key=value[,key=value] argument to helm install.
+
+Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
+
+```bash
+$ helm install --name my-nexus -f values.private.yaml nexus-x.x.x.tgz
+```
+
+> **Tip**: You can use the default [values.yaml](values.yaml)
+
+The initial Username/Pasword combination for the first login is: `admin/admin123`.
+
+## Persistence
+To be able to keep stateful data in the nexus kubernetes container, the following path is used:
+
+```
+/data/nexus
+```
+
+Right now, we do use HostPathes, which do not work in a real cluster environment (like AWS or GCE). Please adopt this one to your own needs.
+
+The above mentioned path should be read/writable on the host for the user 1000.
 
 ### TODO
 - [ ] configuration of Jenkins

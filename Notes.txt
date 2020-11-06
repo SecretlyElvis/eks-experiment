@@ -1,0 +1,99 @@
+* Code Repo:
+https://github.com/SecretlyElvis/eks-experiment.git
+
+### HELM | Jenkins
+https://bitnami.com/stack/jenkins/helm
+https://medium.com/faun/deploying-and-scaling-jenkins-on-kubernetes-2cd4164720bd
+https://medium.com/appfleet/how-to-set-up-jenkins-on-kubernetes-70f8eac3dc7e
+https://hands-on-tech.github.io/2020/03/15/k8s-jenkins-example.html
+https://cloud.google.com/solutions/jenkins-on-kubernetes-engine?hl=it
+https://www.edureka.co/community/74612/how-to-configure-jenkins-environment-using-helm
+https://docs.netapp.com/us-en/project-astra/pdfs/pages/solutions/jenkins-deploy-from-helm-chart.pdf
+
+https://cloudacademy.com/course/introduction-to-helm-1034/helm-charts/
+
+HELM | Nexus
+
+https://blog.sonatype.com/how-to-use-nexus-repository-and-helm-for-ci/cd
+https://help.sonatype.com/repomanager3/formats/helm-repositories
+https://github.com/helm/charts/tree/master/stable/sonatype-nexus
+https://stackoverflow.com/questions/52274286/run-nexus-in-kubernetes-cluster-using-helm
+https://www.freshbrewed.science/getting-started-with-containerized-nexus/index.html
+https://www.sonatype.com/press-release-blog/sonatype-adds-native-helm-support
+
+* Learn EKS standup with Terraform:
+https://learn.hashicorp.com/tutorials/terraform/eks
+
+If you're running the AWS CLI version 1.16.156 or later, then you don't need to install the authenticator. Instead, you can use the aws eks get-token command. For more information, see Create kubeconfig manually. 
+
+* Install EFS CSI driver to EKS cluster (so EFS can be mounted)
+https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html
+
+kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"
+
+* Attach EFS to EKS with Terraform:
+https://stackoverflow.com/questions/60609820/how-to-use-amazon-efs-with-eks-in-terraform
+
+module.vpc.aws_subnet.private[0]
+
+@BMW had it right, I was able to get this all into Terraform.
+
+In the aws/ directory I created all my AWS resources, VPC, EKS, workers, etc. and EFS mounts.
+
+resource "aws_efs_file_system" "example" {
+  creation_token = "${var.cluster-name}-example"
+
+  tags = {
+    Name = "${var.cluster-name}-example"
+  }
+}
+
+resource "aws_efs_mount_target" "example" {
+  count = 2
+  file_system_id = aws_efs_file_system.example.id
+  subnet_id = aws_subnet.this.*.id[count.index]
+  security_groups = [aws_security_group.eks-cluster.id]
+}
+
+I also export the EFS file system IDs from the AWS provider plan.
+
+output "efs_example_fsid" {
+  value = aws_efs_file_system.example.id
+}
+
+After the EKS cluster is created I had to manually install the EFS CSI driver into the cluster before continuing.
+
+Then in the k8s/ directory I reference the aws/ state file so I can use the EFS file system IDs in the PV creation.
+
+data "terraform_remote_state" "remote" {
+  backend = "s3"
+  config = {
+    bucket = "example-s3-terraform"
+    key    = "aws-provider.tfstate"
+    region = "us-east-1"
+  }
+}
+
+Then created the Persistent Volumes using the Kubernetes provider.
+
+resource "kubernetes_persistent_volume" "example" {
+  metadata {
+    name = "example-efs-pv"
+  }
+  spec {
+    storage_class_name = "efs-sc"
+    persistent_volume_reclaim_policy = "Retain"
+    capacity = {
+      storage = "2Gi"
+    }
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_source {
+      nfs {
+        path = "/"
+        server = data.terraform_remote_state.remote.outputs.efs_example_fsid
+      }
+    }
+  }
+}
+
+kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"

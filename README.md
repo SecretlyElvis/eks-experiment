@@ -8,7 +8,7 @@
 - AWS account with appropraite permissions for infrastructure deployment
 ## **Utilizing this Repo**
 Clone repo and change to directory just above `eks-experiment`
-1. **Run Docker Container with Terraform 13 / Kubectl / AWS CLI**
+1. **Run Docker Container with Terraform 13 / Kubectl / Helm / AWS CLI**
 
 `docker run -u 1000:1000 -v $(pwd)/eks-experiment:/opt/app/eks -it secretlyelvis/tf-k8s-aws:v13`
 

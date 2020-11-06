@@ -1,9 +1,9 @@
  data "terraform_remote_state" "remote" {
   backend = "s3"
   config = {
-    bucket = "neuralessence-terraform-state"
+    bucket = ver.bucket
     key    = "eks-experiment.tfstate"
-    region = "ap-southeast-2"
+    region = var.region
   }
 }
 
@@ -17,7 +17,7 @@ provider "kubernetes" {
 
 resource "kubernetes_persistent_volume" "jenkins-fs" {
   metadata {
-    name = "jenkins-efs-pv"
+    name = "jenkins-dev-pv"
   }
   spec {
     storage_class_name = "efs-sc"

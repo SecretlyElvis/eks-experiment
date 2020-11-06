@@ -21,8 +21,8 @@ aws configure set default.region "ap-southeast-2"
 3. **Change to Code Directory and Deploy Base Infrastructure**
 ```
 cd eks
-./tf-run init aws
-./tf-run plan aws
+./tf-run init aws-tf
+./tf-run plan aws-tf
 ./tf-run apply
 ```
 Record the 'cluster_name' and 'region' details from the Terraform output.  To review output again, enter:
@@ -37,13 +37,13 @@ kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernete
 5. **Complete EKS Configuration -- Terraform Option**
 ```
 rm -rf .terraform
-./tf-run init k8s
-./tf-run plan k8s
+./tf-run init k8s-tf
+./tf-run plan k8s-tf
 ./tf-run apply
 ```
 6. **Complete EKS Configuration -- Kubernetes Option**
 
-In file 'pv.yml' replace "EFS_FSID" with output of 'jenkins-fs_fsid', then run:
+In file 'pv.yml' replace "<EFS_FSID>" with output of 'pstorage-fs_fsid', then run:
 
 `kubectl apply -f ./pv.yml`
 

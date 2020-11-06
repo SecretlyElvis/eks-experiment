@@ -28,8 +28,8 @@ output "cluster_name" {
   value       = local.cluster_name
 }
 
-output "jenkins-fs_fsid" {
-  value = aws_efs_file_system.jenkins-fs.id
+output "pstorage-fs_fsid" {
+  value = aws_efs_file_system.pstorage-fs.id
 }
 
 # Outputs for Part II

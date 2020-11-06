@@ -1,5 +1,9 @@
 resource "aws_efs_file_system" "pstorage-fs" {
-  creation_token = "${local.cluster_name}-jenkins-fs"
+  creation_token = "${local.cluster_name}-pstorage-fs"
+
+  lifecycle_policy {
+    transition_to_ia = "AFTER_30_DAYS"
+  }
 
   tags = {
     Name = "${local.cluster_name}-pstorage-fs"

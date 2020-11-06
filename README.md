@@ -30,6 +30,7 @@ Record the 'cluster_name' and 'region' details from the Terraform output.  To re
 `terraform output`
 
 4. **Configure kubectl and install EFS CSI driver**
+_Note: not required if PersistentVolumes use 'nfs' driver_
 ```
 aws eks --region <region> update-kubeconfig --name <cluster name>
 kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"
@@ -43,7 +44,7 @@ rm -rf .terraform
 ```
 6. **Complete EKS Configuration -- Kubernetes Option**
 
-In file 'pv.yml' replace "<EFS_FSID>" with output of 'pstorage-fs_fsid', then run:
+In file 'pv.yml' replace "<EFS_URL>" with output of 'pstorage-fs_dns', then run:
 
 `kubectl apply -f ./pv.yml`
 

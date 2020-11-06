@@ -1,15 +1,43 @@
+# Volume for Jenkins Persistence
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: jenkins-efs-pv
+  name: jenkins-dev-pv
 spec:
   capacity:
-    storage: 2048Gi
-  volumeMode: Filesystem
+    storage: 1024Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: efs-sc
-  csi:
-    driver: efs.csi.aws.com
-    volumeHandle: <EFS_FSID>
+  nfs:
+    server: <EFS_URL>
+    path: "/jenkins-dev"
+# Volume for Nexus Persistence
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nexus-prd-pv
+spec:
+  capacity:
+    storage: 1024Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: <EFS_URL>
+    path: "/nexus-prd"
+
+# Persistent Volume using native AWS EFS_CSI driver
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: jenkins-efs-pv
+#spec:
+#  capacity:
+#    storage: 2048Gi
+#  volumeMode: Filesystem
+#  accessModes:
+#    - ReadWriteMany
+#  persistentVolumeReclaimPolicy: Retain
+#  storageClassName: efs-sc
+#  csi:
+#    driver: efs.csi.aws.com
+#    volumeHandle: <EFS_FSID>

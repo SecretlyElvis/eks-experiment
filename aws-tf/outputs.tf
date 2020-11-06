@@ -28,8 +28,8 @@ output "cluster_name" {
   value       = local.cluster_name
 }
 
-output "pstorage-fs_fsid" {
-  value = aws_efs_file_system.pstorage-fs.id
+output "pstorage-fs_dns" {
+  value = aws_efs_file_system.pstorage-fs.dns_name
 }
 
 # Outputs for Part II

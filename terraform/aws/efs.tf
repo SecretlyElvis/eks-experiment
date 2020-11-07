@@ -33,7 +33,7 @@ resource "aws_efs_access_point" "jenkins_dev" {
   }
 
   root_directory {
-    path = "jenkins_dev"
+    path = "/jenkins_dev"
 
     creation_info {
       owner_uid = "1000"
@@ -56,7 +56,7 @@ resource "aws_efs_access_point" "nexus_prd" {
   }
 
   root_directory {
-    path = "jenkins_dev"
+    path = "/nexus_prd"
 
     creation_info {
       owner_uid = "1000"

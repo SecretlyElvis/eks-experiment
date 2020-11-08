@@ -2,8 +2,11 @@
 https://github.com/SecretlyElvis/eks-experiment.git
 
 ### HELM | Jenkins
-Jenkins.io Installing Jenkins on Kubernetes:
+Official Jenkins.io Installing Jenkins on Kubernetes:
 https://www.jenkins.io/doc/book/installing/kubernetes/
+
+Jenkins on Kubernetes Engine:
+https://cloud.google.com/solutions/jenkins-on-kubernetes-engine
 
 https://bitnami.com/stack/jenkins/helm
 https://medium.com/faun/deploying-and-scaling-jenkins-on-kubernetes-2cd4164720bd
@@ -14,6 +17,9 @@ https://www.edureka.co/community/74612/how-to-configure-jenkins-environment-usin
 https://docs.netapp.com/us-en/project-astra/pdfs/pages/solutions/jenkins-deploy-from-helm-chart.pdf
 
 https://cloudacademy.com/course/introduction-to-helm-1034/helm-charts/
+
+Useful commands:
+helm search repo jenkinsci
 
 HELM | Nexus
 

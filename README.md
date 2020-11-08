@@ -25,28 +25,52 @@ cd terraform
 ./tf-run plan aws
 ./tf-run apply
 ```
-Record the `cluster_name` and `region` details from the Terraform output.  To review output again:
+Record the `cluster_name`, `region` and `pstorage-fs_dns` from the Terraform output for later steps.
 
+To review output again:
 `terraform output`
 
-4. **Configure 'kubectl'**
+4. **Configure 'kubectl' to utilize EKS Cluster**
 
 `aws eks --region <region> update-kubeconfig --name <cluster name>`
 
 5. **Deploy Jenkins**
 
-Configure Helm
+Create a namespace for the Jenkins DEV deployment:
+`kubectl create namespace jenkins-dev`
+
+Replace `<EFS_URL>` in the file `helm/jenkins/pv-jenkins.yml` with `pstorage-fs_dns` value from Terraform.
+
+Deploy PersistentVolume for Jenkins DEV:
+`kubectl apply -f helm/jenkins/pv-jenkins.yml`
+
+Deploy Service Account and Cluster Role for Jenkins DEV:
+`kubectl apply -f helm/jenkins/sa-jenkins.yml`
+
+Update the `installPlugins:` section of `helm/jenkins/values-jenkins.yml` to add any desired plugins during install.
+
+Configure Helm and deploy `jenkinsci/jenkins` chart:
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
+helm install jenkins-dev -n jenkins-dev -f helm/jenkins/values-jenkins.yml jenkinsci/jenkins
 ```
+The server can take several minutes to start up as modules are installed.  Check status with:
+`kubectl get pods -n jenkins-dev`
 
-`kubectl apply -f ./pv.yml`
-
-
+Retrieve the generated 'admin' user password for initial access:
+```
+path="{.data.jenkins-admin-password}"
+secret=$(kubectl get secret -n jenkins jenkins -o jsonpath=$path)
+echo $(echo $secret | base64 --decode)
+```
 
 5. **Deploy Nexus**
 
+TBD
 
-#### Out of Scope
-- Security
+#### TODO
+
+- Ingress configuration through LoadBalancer (ClusterIP on individual pods?)
+- Jenkins access to Nexus pod/namespace within Kubernetes
+- Security review

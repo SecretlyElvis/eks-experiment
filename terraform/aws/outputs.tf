@@ -32,8 +32,6 @@ output "pstorage-fs_dns" {
   value = aws_efs_file_system.pstorage-fs.dns_name
 }
 
-# Outputs for Part II
-
 output "p2-host" {
     value = data.aws_eks_cluster.cluster.endpoint
 }

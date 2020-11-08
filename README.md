@@ -37,14 +37,17 @@ To review output again:
 5. **Deploy Jenkins**
 
 Create a namespace for the Jenkins DEV deployment:
+
 `kubectl create namespace jenkins-dev`
 
 Replace `<EFS_URL>` in the file `helm/jenkins/pv-jenkins.yml` with `pstorage-fs_dns` value from Terraform.
 
 Deploy PersistentVolume for Jenkins DEV:
+
 `kubectl apply -f helm/jenkins/pv-jenkins.yml`
 
 Deploy Service Account and Cluster Role for Jenkins DEV:
+
 `kubectl apply -f helm/jenkins/sa-jenkins.yml`
 
 Update the `installPlugins:` section of `helm/jenkins/values-jenkins.yml` to add any desired plugins during install.
@@ -56,6 +59,7 @@ helm repo update
 helm install jenkins-dev -n jenkins-dev -f helm/jenkins/values-jenkins.yml jenkinsci/jenkins
 ```
 The server can take several minutes to start up as modules are installed.  Check status with:
+
 `kubectl get pods -n jenkins-dev`
 
 Retrieve the generated 'admin' user password for initial access:

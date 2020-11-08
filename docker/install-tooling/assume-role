@@ -1,0 +1,20 @@
+#!/bin/sh
+# Simple Script to Assume an AWS Role
+
+if [ "$#" -lt 1 ]; then
+    echo "Script requires at least one argument: ROLE_ARN"
+    echo ""
+    echo "Usage:  $0 ROLE_ARN [REGION]"
+    echo "Example: $0 arn:aws:iam::917737136967:role/wsl_role_deploy_Infrastructure ap-southeast-2"
+    echo ""
+    exit 0
+fi
+
+ASSUME_ROLE=$1
+REGION=${2:-ap-southeast-2}
+
+aws_credentials_json=$(aws sts assume-role --role-arn ${ASSUME_ROLE} --role-session-name devSession --region ${REGION})
+
+aws configure set aws_access_key_id $(echo "$aws_credentials_json" | jq --exit-status --raw-output .Credentials.AccessKeyId)
+aws configure set aws_secret_access_key $(echo "$aws_credentials_json" | jq --exit-status --raw-output .Credentials.SecretAccessKey)
+aws configure set aws_session_token $(echo "$aws_credentials_json" | jq --exit-status --raw-output .Credentials.SessionToken)

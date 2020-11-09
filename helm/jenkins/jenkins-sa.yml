@@ -2,7 +2,8 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-    name: jenkins-dev-sa
+    name: jenkins-dev
+    namespace: jenkins-dev
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -11,7 +12,8 @@ metadata:
       rbac.authorization.kubernetes.io/autoupdate: "true"
     labels:
       kubernetes.io/bootstrapping: rbac-defaults
-    name: jenkins-dev-cr
+    name: jenkins-dev
+    namespace: jenkins-dev
 rules:
 - apiGroups: ["*"]
   resources:
@@ -63,11 +65,11 @@ metadata:
       rbac.authorization.kubernetes.io/autoupdate: "true"
     labels:
       kubernetes.io/bootstrapping: rbac-defaults
-    name: jenkins-dev-crb 
+    name: jenkins-dev 
 roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: jenkins-dev-cr
+    name: jenkins-dev
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: Group

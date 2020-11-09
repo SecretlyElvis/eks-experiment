@@ -1,0 +1,33 @@
+# PersistentVolume for Jenkins Control Pod
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-dev-pv
+  namespace: jenkins-dev
+spec:
+  storageClassName: jenkins-dev-pv
+  capacity:
+    storage: 1024Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: <EFS_URL>
+    path: "/jenkins_dev"
+---
+# Persistent Volume Claim for /jenkins-prd used by Jenkins Deployment
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-dev-pvc
+  namespace: jenkins-dev
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: jenkins-dev-pv
+  volumeName: jenkins-dev-pv
+  resources:
+    requests:
+      storage: 1024Gi
+    
+    

@@ -21,8 +21,8 @@ aws configure set default.region "ap-southeast-2"
 3. **Deploy Base Infrastructure**
 ```
 cd terraform
-./tf-run init aws
-./tf-run plan aws
+./tf-run init aws/
+./tf-run plan aws/
 ./tf-run apply
 ```
 Record the `cluster_name`, `region` and `pstorage-fs_dns` from the Terraform output for later steps.
@@ -44,19 +44,19 @@ Replace `<EFS_URL>` in the file `helm/jenkins/pv-jenkins.yml` with `pstorage-fs_
 
 Deploy PersistentVolume for Jenkins DEV:
 
-`kubectl apply -f helm/jenkins/pv-jenkins.yml`
+`kubectl apply -f helm/jenkins/jenkins-pv.yml`
 
 Deploy Service Account and Cluster Role for Jenkins DEV:
 
-`kubectl apply -f helm/jenkins/sa-jenkins.yml`
+`kubectl apply -f helm/jenkins/jenkins-sa.yml`
 
-Update the `installPlugins:` section of `helm/jenkins/values-jenkins.yml` to add any desired plugins during install.
+Update the `installPlugins:` section of `helm/jenkins/jenkins-values.yml` to add any desired plugins during install.
 
 Configure Helm and deploy `jenkinsci/jenkins` chart:
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
-helm install jenkins-dev -n jenkins-dev -f helm/jenkins/values-jenkins.yml jenkinsci/jenkins
+helm install jenkins-dev -n jenkins-dev -f helm/jenkins/jenkins-values.yml jenkinsci/jenkins
 ```
 The server can take several minutes to start up as modules are installed.  Check status with:
 

@@ -8,6 +8,9 @@ https://www.jenkins.io/doc/book/installing/kubernetes/
 Jenkins on Kubernetes Engine:
 https://cloud.google.com/solutions/jenkins-on-kubernetes-engine
 
+Helm Chart codebase:
+https://github.com/jenkinsci/helm-charts
+
 https://bitnami.com/stack/jenkins/helm
 https://medium.com/faun/deploying-and-scaling-jenkins-on-kubernetes-2cd4164720bd
 https://medium.com/appfleet/how-to-set-up-jenkins-on-kubernetes-70f8eac3dc7e

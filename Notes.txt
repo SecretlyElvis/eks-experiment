@@ -33,6 +33,28 @@ https://stackoverflow.com/questions/52274286/run-nexus-in-kubernetes-cluster-usi
 https://www.freshbrewed.science/getting-started-with-containerized-nexus/index.html
 https://www.sonatype.com/press-release-blog/sonatype-adds-native-helm-support
 
+#### RESOURCES ####
+
+-- ClusterRole with multiple ApiGroups:
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+ name: get-pods
+rules:
+ - apiGroups: ["*"]
+   resources: ["pods"]
+   verbs: ["list","get","watch"]
+ - apiGroups: ["extensions","apps"]
+   resources: ["deployments"]
+   verbs: ["get","list","watch","create","update","patch","delete"]
+
+-- Mounting EFS file system:
+
+$ sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport mount-target-IP:/   ~/efs
+
+-- 
+
 * Learn EKS standup with Terraform:
 https://learn.hashicorp.com/tutorials/terraform/eks
 

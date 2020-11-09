@@ -40,7 +40,7 @@ Create a namespace for the Jenkins DEV deployment:
 
 `kubectl create namespace jenkins-dev`
 
-Replace `<EFS_URL>` in the file `helm/jenkins/pv-jenkins.yml` with `pstorage-fs_dns` value from Terraform.
+Replace `<EFS_URL>` in the file `helm/jenkins/jenkins-pv.yml` with `pstorage-fs_dns` value from Terraform.
 
 Deploy PersistentVolume for Jenkins DEV:
 

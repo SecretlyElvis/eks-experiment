@@ -27,9 +27,6 @@ cd terraform
 ```
 Record the `cluster_name`, `region` and `pstorage-fs_dns` from the Terraform output for later steps.
 
-To review output again:
-`terraform output`
-
 4. **Configure 'kubectl' to utilize EKS Cluster**
 
 `aws eks --region <region> update-kubeconfig --name <cluster name>`

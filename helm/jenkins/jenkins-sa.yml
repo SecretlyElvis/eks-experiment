@@ -13,50 +13,48 @@ metadata:
       kubernetes.io/bootstrapping: rbac-defaults
     name: jenkins-dev-cr
 rules:
-- apiGroups:
-    - '*'
-    resources:
-    - statefulsets
-    - services
-    - replicationcontrollers
-    - replicasets
-    - podtemplates
-    - podsecuritypolicies
-    - pods
-    - pods/log
-    - pods/exec
-    - podpreset
-    - poddisruptionbudget
-    - persistentvolumes
-    - persistentvolumeclaims
-    - jobs
-    - endpoints
-    - deployments
-    - deployments/scale
-    - daemonsets
-    - cronjobs
-    - configmaps
-    - namespaces
-    - events
-    - secrets
-    verbs:
-    - create
-    - get
-    - watch
-    - delete
-    - list
-    - patch
-    - apply
-    - update
-    - apiGroups:
-    - ""
-    resources:
-    - nodes
-    verbs:
-    - get
-    - list
-    - watch
-    - update
+- apiGroups: ["*"]
+  resources:
+  - statefulsets
+  - services
+  - replicationcontrollers
+  - replicasets
+  - podtemplates
+  - podsecuritypolicies
+  - pods
+  - pods/log
+  - pods/exec
+  - podpreset
+  - poddisruptionbudget
+  - persistentvolumes
+  - persistentvolumeclaims
+  - jobs
+  - endpoints
+  - deployments
+  - deployments/scale
+  - daemonsets
+  - cronjobs
+  - configmaps
+  - namespaces
+  - events
+  - secrets
+  verbs:
+  - create
+  - get
+  - watch
+  - delete
+  - list
+  - patch
+  - apply
+  - update
+- apiGroups: [""]
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -72,7 +70,7 @@ roleRef:
     name: jenkins-dev-cr
 subjects:
 - apiGroup: rbac.authorization.k8s.io
-    kind: Group
-    name: system:serviceaccounts:jenkins-dev
+  kind: Group
+  name: system:serviceaccounts:jenkins-dev
   
   

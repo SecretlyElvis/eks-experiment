@@ -25,7 +25,7 @@ cd terraform
 ./tf-run plan aws/
 ./tf-run apply
 ```
-Record the `cluster_name`, `region` and `pstorage-fs_dns` from the Terraform output for later steps.
+Record the `cluster_name`, `region` and `pstorage-fs_fsid` from the Terraform output for later steps.
 
 4. **Configure 'kubectl' to utilize EKS Cluster**
 
@@ -33,23 +33,27 @@ Record the `cluster_name`, `region` and `pstorage-fs_dns` from the Terraform out
 
 5. **Deploy Jenkins**
 
-Create a namespace for the Jenkins DEV deployment:
+- Create a namespace for the Jenkins DEV deployment:
 
 `kubectl create namespace jenkins-dev`
 
-Replace `<EFS_URL>` in the file `helm/jenkins/jenkins-pv.yml` with `pstorage-fs_dns` value from Terraform.
+- Install EFS CSI driver:
 
-Deploy PersistentVolume for Jenkins DEV:
+`kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"`
+
+- Deploy PersistentVolume for Jenkins DEV:
+
+Replace `<FS_ID>` in the file `helm/jenkins/jenkins-pv.yml` with `pstorage-fs_fsid` value from Terraform.
 
 `kubectl apply -f helm/jenkins/jenkins-pv.yml`
 
-Deploy Service Account and Cluster Role for Jenkins DEV:
+- Deploy Service Account and Cluster Role for Jenkins DEV:
 
 `kubectl apply -f helm/jenkins/jenkins-sa.yml`
 
-Update the `installPlugins:` section of `helm/jenkins/jenkins-values.yml` to add any desired plugins during install.
+- Configure Helm and deploy `jenkinsci/jenkins` chart:
 
-Configure Helm and deploy `jenkinsci/jenkins` chart:
+Update the `installPlugins:` section of `helm/jenkins/jenkins-values.yml` to add any desired plugins during install.
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
@@ -59,7 +63,7 @@ The server can take several minutes to start up as modules are installed.  Check
 
 `kubectl get pods -n jenkins-dev`
 
-Retrieve the generated 'admin' user password for initial access:
+- Retrieve the generated 'admin' user password for initial access:
 ```
 path="{.data.jenkins-admin-password}"
 secret=$(kubectl get secret -n jenkins jenkins -o jsonpath=$path)

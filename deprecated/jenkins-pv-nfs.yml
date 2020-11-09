@@ -10,11 +10,10 @@ spec:
     storage: 1024Gi
   accessModes:
     - ReadWriteMany
-  volumeMode: Filesystem
   persistentVolumeReclaimPolicy: Retain
-  csi:
-    driver: efs.csi.aws.com
-    volumeHandle: <FS_ID>:/jenkins_dev
+  nfs:
+    server: fs-5c588564.efs.ap-southeast-2.amazonaws.com
+    path: "/jenkins_dev"
 ---
 # Persistent Volume Claim for /jenkins-prd used by Jenkins Deployment
 apiVersion: v1

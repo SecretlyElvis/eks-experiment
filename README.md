@@ -46,6 +46,7 @@ Record the `cluster_name`, `region` and `pstorage-fs_fsid` from the Terraform ou
 Make the following replacements in file `helm/jenkins/jenkins-pv.yml`:
 
   `<FS_ID>` --> `pstorage-fs_fsid` value from Terraform (*e.g. 'fs-04be623c'*)
+
   `<FSAP_ID>` --> `pstorage-jenkins_apid` (*e.g. 'fsap-055e6d74b33a0ed6a'*)
 
 `kubectl apply -f helm/jenkins/jenkins-pv.yml`
@@ -69,8 +70,8 @@ The server can take several minutes to start up as modules are installed.  Check
 - Retrieve the generated 'admin' user password for initial access:
 ```
 path="{.data.jenkins-admin-password}"
-secret=$(kubectl get secret -n jenkins jenkins -o jsonpath=$path)
-echo $(echo $secret | base64 --decode)
+secret=$(kubectl get secret -n jenkins-dev jenkins-dev -o jsonpath=$path)
+echo $(echo $secret | base64 -d)
 ```
 
 5. **Deploy Nexus**

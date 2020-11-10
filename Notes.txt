@@ -52,6 +52,9 @@ rules:
 -- Mounting EFS file system:
 sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-5c588564.efs.ap-southeast-2.amazonaws.com:/ efs
 
+-- Mounting EFS Access Point:
+mount -t efs -o tls,accesspoint=fsap-12345678 fs-12345678: /localmountpoint
+
 -- Install EFS CSI driver into Kubernetes (for accessing PersistentVolumes with CSI driver instead of NFS)
 kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"
 

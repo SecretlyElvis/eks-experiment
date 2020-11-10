@@ -14,7 +14,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: <FS_ID>:/jenkins_dev
+    volumeHandle: "<FS_ID>::<FSAP_ID>"
 ---
 # Persistent Volume Claim for /jenkins-prd used by Jenkins Deployment
 apiVersion: v1

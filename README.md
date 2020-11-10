@@ -43,7 +43,10 @@ Record the `cluster_name`, `region` and `pstorage-fs_fsid` from the Terraform ou
 
 - Deploy PersistentVolume for Jenkins DEV:
 
-Replace `<FS_ID>` in the file `helm/jenkins/jenkins-pv.yml` with `pstorage-fs_fsid` value from Terraform.
+Make the following replacements in file `helm/jenkins/jenkins-pv.yml`:
+
+  `<FS_ID>` --> `pstorage-fs_fsid` value from Terraform (*e.g. 'fs-04be623c'*)
+  `<FSAP_ID>` --> `pstorage-jenkins_apid` (*e.g. 'fsap-055e6d74b33a0ed6a'*)
 
 `kubectl apply -f helm/jenkins/jenkins-pv.yml`
 
@@ -53,7 +56,7 @@ Replace `<FS_ID>` in the file `helm/jenkins/jenkins-pv.yml` with `pstorage-fs_fs
 
 - Configure Helm and deploy `jenkinsci/jenkins` chart:
 
-Update the `installPlugins:` section of `helm/jenkins/jenkins-values.yml` to add any desired plugins during install.
+Optional: update the `installPlugins:` section of `helm/jenkins/jenkins-values.yml` to add any desired plugins during install.
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update

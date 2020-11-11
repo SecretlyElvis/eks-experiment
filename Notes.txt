@@ -58,6 +58,12 @@ https://github.com/travelaudience/kubernetes-nexus#pre-requisites
 Official Sonatype Nexus image:
 https://hub.docker.com/r/sonatype/nexus3/
 
+Backing up Nexus Configs and Artifacts:
+https://blog.sonatype.com/2010/01/how-to-backup-nexus-configuration-and-repository-artifacts/
+
+Why use Nexus?:
+https://blog.sonatype.com/how-to-use-nexus-repository-and-helm-for-ci/cd
+
 Very basic Nexus setup:
 https://devopscube.com/setup-nexus-kubernetes/
 

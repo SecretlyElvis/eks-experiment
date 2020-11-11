@@ -76,7 +76,14 @@ echo $(echo $secret | base64 -d)
 
 5. **Deploy Nexus**
 
-TBD
+- Create a namespace for the Nexus PRD deployment:
+
+`kubectl create namespace nexus-prd`
+
+```
+helm repo add oteemocharts https://oteemo.github.io/charts
+helm install sonatype-nexus -n nexus-prd -f helm/nexus/nexus-values.yml oteemocharts/sonatype-nexus
+```
 
 #### TODO
 

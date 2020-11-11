@@ -44,6 +44,7 @@ resource "aws_efs_access_point" "jenkins_dev" {
 }
 
 # NEXUS_PRD
+# Note: Depending on the Nexus image used, might have to set uid=200
 resource "aws_efs_access_point" "nexus_prd" {
   file_system_id = aws_efs_file_system.pstorage-fs.id
 

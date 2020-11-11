@@ -40,6 +40,10 @@ output "pstorage-jenkins_apid" {
   value = aws_efs_access_point.jenkins_dev.id
 }
 
+output "pstorage-nexus_apid" {
+  value = aws_efs_access_point.nexus_prd.id
+}
+
 output "p2-host" {
     value = data.aws_eks_cluster.cluster.endpoint
 }

@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: nexus-prd-pv
+  namespace: nexus-prd
 spec:
   storageClassName: nexus-prd-pv
   capacity:
@@ -13,4 +14,21 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   csi:
     driver: efs.csi.aws.com
-    volumeHandle: <FS_ID>:/nexus_prd
+    volumeHandle: "<FS_ID>::<FSAP_ID>"
+---
+# Persistent Volume Claim for Nexus
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nexus-prd-pvc
+  namespace: nexus-prd
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nexus-prd-pv
+  volumeName: nexus-prd-pv
+  resources:
+    requests:
+      storage: 1024Gi
+    
+    

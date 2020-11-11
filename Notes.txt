@@ -1,6 +1,22 @@
 * Code Repo:
 https://github.com/SecretlyElvis/eks-experiment.git
 
+### AWS | resources
+
+ALB Ingress Controller for EKS:
+https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html
+
+Annotations for ALB Ingress controller:
+kubernetes.io/ingress.class: alb
+alb.ingress.kubernetes.io/group.name: <my-group> (to add multiple ingress elements to single group)
+alb.ingress.kubernetes.io/group.order: <'10'> (to order rules, lower numbers evaluated first)
+
+Ingress Annotation list:
+https://kubernetes-sigs.github.io/aws-load-balancer-controller/guide/ingress/annotations/
+
+Ingress IAM policy (downloaded and installed for ALB):
+https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2_ga/docs/install/iam_policy.json
+
 ### HELM | Jenkins
 Official Jenkins.io Installing Jenkins on Kubernetes:
 https://www.jenkins.io/doc/book/installing/kubernetes/
@@ -24,16 +40,37 @@ https://cloudacademy.com/course/introduction-to-helm-1034/helm-charts/
 Useful commands:
 helm search repo jenkinsci
 
-HELM | Nexus
+### HELM | Nexus
 
 https://blog.sonatype.com/how-to-use-nexus-repository-and-helm-for-ci/cd
 https://help.sonatype.com/repomanager3/formats/helm-repositories
-https://github.com/helm/charts/tree/master/stable/sonatype-nexus
+https://github.com/helm/charts/tree/master/stable/sonatype-nexus (deprecated)
 https://stackoverflow.com/questions/52274286/run-nexus-in-kubernetes-cluster-using-helm
 https://www.freshbrewed.science/getting-started-with-containerized-nexus/index.html
 https://www.sonatype.com/press-release-blog/sonatype-adds-native-helm-support
 
+Possible chart option (Otemo -- GCP-specific):
+https://github.com/Oteemo/charts
+
+Kubernetes Nexus:
+https://github.com/travelaudience/kubernetes-nexus#pre-requisites
+
+Official Sonatype Nexus image:
+https://hub.docker.com/r/sonatype/nexus3/
+
+Very basic Nexus setup:
+https://devopscube.com/setup-nexus-kubernetes/
+
+Official Nexus Repository Docker Image:
+https://hub.docker.com/r/sonatype/nexus3
+
+TravelAudience Nexus Repository Docker Image:
+https://quay.io/repository/travelaudience/docker-nexus
+
 #### RESOURCES ####
+
+Getitng logs from elements in Kubernetes:
+kubectl logs -n kube-system   deployment.apps/aws-load-balancer-controller
 
 -- ClusterRole with multiple ApiGroups:
 

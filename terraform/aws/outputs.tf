@@ -44,6 +44,10 @@ output "pstorage-nexus_apid" {
   value = aws_efs_access_point.nexus_prd.id
 }
 
+output "alb-policy-arn" {
+  value = aws_iam_policy.alb-ingress-controller.arn
+}
+
 output "p2-host" {
     value = data.aws_eks_cluster.cluster.endpoint
 }

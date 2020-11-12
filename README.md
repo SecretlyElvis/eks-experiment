@@ -41,10 +41,12 @@ Record the `cluster_name`, `region`, `pstorage-fs_fsid` and `alb-policy-arn` fro
 
 - Create an IAM OIDC provider and associate it with your cluster:
 
+_Replace `<region>` and `<cluster_name>` with the value from Terraform output._
+
 ```
 eksctl utils associate-iam-oidc-provider \
-    --region <region-code> \
-    --cluster <my-cluster> \
+    --region <region> \
+    --cluster <cluster_name> \
     --approve
 ```
 
@@ -54,7 +56,7 @@ eksctl utils associate-iam-oidc-provider \
   - Cluster Role
   - Cluster Role Binding
 
-Replace `<aln-policy-arn>` with the value from Terraform output above.
+_Replace `<alb-policy-arn>` with the value from Terraform output._
 
 ```
 eksctl create iamserviceaccount \

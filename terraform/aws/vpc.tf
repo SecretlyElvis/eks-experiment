@@ -1,7 +1,7 @@
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "schwagg-eks-${random_string.suffix.result}"
+  cluster_name = "devops-poc-${random_string.suffix.result}"
 }
 
 resource "random_string" "suffix" {
@@ -11,7 +11,7 @@ resource "random_string" "suffix" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.6.0"
+  version = "2.64.0"
 
   name                 = "schwagg-vpc"
   cidr                 = "10.0.0.0/16"

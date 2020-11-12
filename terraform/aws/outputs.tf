@@ -47,15 +47,3 @@ output "pstorage-nexus_apid" {
 output "alb-policy-arn" {
   value = aws_iam_policy.alb-ingress-controller.arn
 }
-
-output "p2-host" {
-    value = data.aws_eks_cluster.cluster.endpoint
-}
-
-output "p2-token" {
-    value = data.aws_eks_cluster_auth.cluster.token
-}
-
-output "p2-ca-cert" {
-    value = data.aws_eks_cluster.cluster.certificate_authority.0.data
-}

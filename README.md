@@ -41,7 +41,7 @@ Record the `cluster_name`, `region`, `pstorage-fs_fsid` and `alb-policy-arn` fro
 
 - Create an IAM OIDC provider and associate it with your cluster:
 
-_Replace `<region>` and `<cluster_name>` with the value from Terraform output._
+_Replace `<region>` and `<cluster_name>` with the values from Terraform output._
 
 ```
 eksctl utils associate-iam-oidc-provider \

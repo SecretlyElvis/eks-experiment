@@ -11,6 +11,9 @@ kubernetes.io/ingress.class: alb
 alb.ingress.kubernetes.io/group.name: <my-group> (to add multiple ingress elements to single group)
 alb.ingress.kubernetes.io/group.order: <'10'> (to order rules, lower numbers evaluated first)
 
+When defining the load balancer, specify 'Instance' traffic mode (routes to node, then proxies to pods) 
+alb.ingress.kubernetes.io/target-type: instance
+
 Ingress Annotation list:
 https://kubernetes-sigs.github.io/aws-load-balancer-controller/guide/ingress/annotations/
 
@@ -54,9 +57,6 @@ https://github.com/Oteemo/charts
 
 Kubernetes Nexus:
 https://github.com/travelaudience/kubernetes-nexus#pre-requisites
-
-Official Sonatype Nexus image:
-https://hub.docker.com/r/sonatype/nexus3/
 
 Backing up Nexus Configs and Artifacts:
 https://blog.sonatype.com/2010/01/how-to-backup-nexus-configuration-and-repository-artifacts/

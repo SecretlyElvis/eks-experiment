@@ -10,7 +10,7 @@
 
 CMD=${1:---help}
 DIR=${2:-aws}
-planfile="eks-experiment.tfplan"
+planfile="devops-poc.tfplan"
 
 # Uncomment the following lines to enable debugging
 # export TF_LOG=TRACE

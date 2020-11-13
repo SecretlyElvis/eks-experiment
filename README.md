@@ -25,7 +25,13 @@ cd terraform
 ./tf-run plan aws/
 ./tf-run apply
 ```
-Record the `cluster_name`, `region`, `pstorage-fs_fsid` and `alb-policy-arn` from the Terraform output for later steps.
+Make note of the output vlaues as many are used in subsequent commands:
+- `region`
+- `cluster_name`
+- `pstorage-fs_fsid`
+- `pstorage-jenkins_apid`
+- `pstorage-nexus_apid`
+- `alb-policy-arn`
 
 4. **Configure 'kubectl' to utilize EKS Cluster**
 
@@ -50,23 +56,24 @@ eksctl utils associate-iam-oidc-provider \
     --approve
 ```
 
-- The following command creates several components to be used by the Load Balancer Controller:
+- The following command creates several components to be used by the Load Balancer Controller (AWS IAM role bound to a Kubernetes service account):
   - IAM Role
   - Kubernetes Service Account named 'aws-load-balancer-controller' (in the 'kube-system' namespace)
   - Cluster Role
   - Cluster Role Binding
 
-_Replace `<alb-policy-arn>` with the value from Terraform output._
+_Replace `<cluster_name>` and `<alb-policy-arn>` with values from Terraform output._
 
 ```
 eksctl create iamserviceaccount \
-  --cluster=<my-cluster> \
+  --cluster=<cluster_name> \
   --namespace=kube-system \
   --name=aws-load-balancer-controller \
   --attach-policy-arn=<alb-policy-arn>> \
   --override-existing-serviceaccounts \
   --approve
 ```
+_Note 13-Nov-2020: 'eksctl' does not currently support clusters created by Terraform.  Issue being worked on: https://github.com/weaveworks/eksctl/pull/2775.  Will use separate deploy file until issue fixed._
 
 - Install the TargetGroupBinding custom resource definitions: 
 
@@ -140,13 +147,17 @@ echo $(echo $secret | base64 -d)
 
 `kubectl create namespace nexus-prd`
 
-Make the following replacements in file `helm/jenkins/nexus-pv.yml`:
+- Make the following replacements in file `helm/jenkins/nexus-pv.yml` and deploy:
 
   `<FS_ID>` --> `pstorage-fs_fsid` value from Terraform (*e.g. 'fs-04be623c'*)
 
   `<FSAP_ID>` --> `pstorage-nexus_apid` (*e.g. 'fsap-055e6d74b33a0ed6a'*)
 
-`kubectl apply -f helm/jenkins/nexus-pv.yml`
+`kubectl apply -f helm/nexus/nexus-pv.yml`
+
+- Deploy the Nexus applicatoni stack (TODO: Helm-ify)
+
+`kubectl apply -f helm/nexus/nexus-deploy.yml`
 
 #### TODO
 

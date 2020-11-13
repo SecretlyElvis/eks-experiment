@@ -75,6 +75,10 @@ https://quay.io/repository/travelaudience/docker-nexus
 
 #### RESOURCES ####
 
+-- Ingress Controllers 101 (HAProxy):
+https://thenewstack.io/kubernetes-ingress-for-beginners/
+
+
 Getitng logs from elements in Kubernetes:
 kubectl logs -n kube-system   deployment.apps/aws-load-balancer-controller
 

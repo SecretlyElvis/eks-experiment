@@ -70,6 +70,17 @@ resource "aws_security_group" "all_worker_mgmt" {
   }
 
   ingress {
+    description = "Inbound NFS"
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+
+  ingress {
     description = "Inbound HTTP"
     from_port = 80
     to_port   = 80

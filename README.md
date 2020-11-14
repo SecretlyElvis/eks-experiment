@@ -48,7 +48,8 @@ Make note of the output vlaues as many are used in subsequent commands:
 ```
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
-helm install mycontroller haproxytech/kubernetes-ingress
+helm install devops-poc-ingress haproxytech/kubernetes-ingress \
+    --set controller.service.type=LoadBalancer
 ```
 
 _Note: HAProxy Ingress Controller watches all namespaces_
@@ -84,6 +85,13 @@ helm install jenkins-dev -n jenkins-dev -f helm/jenkins/jenkins-values.yml jenki
 The server can take several minutes to start up as modules are installed.  Check status with:
 
 `kubectl get pods -n jenkins-dev`
+
+If all was successful, you will see something simi.ar to:
+
+```
+NAME                          READY   STATUS    RESTARTS   AGE
+jenkins-dev-64dcc79c5-hc2h5   2/2     Running   0          2m54s
+```
 
 - Retrieve the generated 'admin' user password for initial access:
 ```

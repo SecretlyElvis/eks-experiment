@@ -81,6 +81,9 @@ https://thenewstack.io/kubernetes-ingress-for-beginners/
 -- Using the HAProxy Ingress controller (good exapmles at the bottom)
 https://www.haproxy.com/documentation/hapee/1-5r2/installation/kubernetes-ingress-controller/
 
+-- Installing HAProxy Ingress Controller into EKS:
+https://www.haproxy.com/documentation/kubernetes/latest/installation/community/aws/
+
 Getitng logs from elements in Kubernetes:
 kubectl logs -n kube-system   deployment.apps/aws-load-balancer-controller
 

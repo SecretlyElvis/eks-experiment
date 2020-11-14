@@ -43,15 +43,64 @@ Make note of the output vlaues as many are used in subsequent commands:
 
 `kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"`
 
-- Install HAProxy Ingress Controller:
+- **Install AWS ALB Ingress Controller**
+
+- Create an IAM OIDC provider and associate it with your cluster:
+
+_Replace `<region>` and `<cluster_name>` with the values from Terraform output._
 
 ```
-helm repo add haproxytech https://haproxytech.github.io/helm-charts
-helm repo update
-helm install mycontroller haproxytech/kubernetes-ingress
+eksctl utils associate-iam-oidc-provider \
+    --region <region> \
+    --cluster <cluster_name> \
+    --approve
 ```
 
-_Note: HAProxy Ingress Controller watches all namespaces_
+- The following command creates several components to be used by the Load Balancer Controller (AWS IAM role bound to a Kubernetes service account):
+  - IAM Role
+  - Kubernetes Service Account named 'aws-load-balancer-controller' (in the 'kube-system' namespace)
+  - Cluster Role
+  - Cluster Role Binding
+
+_Replace `<cluster_name>` and `<alb-policy-arn>` with values from Terraform output._
+
+```
+eksctl create iamserviceaccount \
+  --cluster=<cluster_name> \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --attach-policy-arn=<alb-policy-arn>> \
+  --override-existing-serviceaccounts \
+  --approve
+```
+_Note 13-Nov-2020: 'eksctl' does not currently support clusters created by Terraform.  Issue being worked on: https://github.com/weaveworks/eksctl/pull/2775.  Will use separate deploy file until issue fixed._
+
+- Install the TargetGroupBinding custom resource definitions: 
+
+`kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"`
+
+- Install the `eks-charts` Helm repository and install the AWS load balancer controller: 
+
+```
+helm repo add eks https://aws.github.io/eks-charts
+
+helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
+  --set clusterName=<cluster-name> \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  -n kube-system
+```
+
+- Verify that the conroller is installed:
+
+`kubectl get deployment -n kube-system aws-load-balancer-controller`
+
+_You should see something similar to:_
+
+```
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+aws-load-balancer-controller   1/1     1            1           84s
+```
 
 6. **Deploy Jenkins (Charts)**
 
@@ -75,7 +124,7 @@ Make the following replacements in file `helm/jenkins/jenkins-pv.yml`:
 
 - Configure Helm and deploy `jenkinsci/jenkins` chart:
 
-_Optional: update the `installPlugins:` section of `helm/jenkins/jenkins-values.yml` to add any desired plugins during install._
+Optional: update the `installPlugins:` section of `helm/jenkins/jenkins-values.yml` to add any desired plugins during install.
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
@@ -106,14 +155,13 @@ echo $(echo $secret | base64 -d)
 
 `kubectl apply -f helm/nexus/nexus-pv.yml`
 
-- Deploy the Nexus applicatoni stack:
+- Deploy the Nexus applicatoni stack (TODO: Helm-ify)
 
 `kubectl apply -f helm/nexus/nexus-deploy.yml`
 
 #### TODO
 
-- Ingress configuration through AWS ALB Controller (requires update to 'eksctl' to support EKS clusters built by Terraform)
-- Locate (or build) a suitable Helm Chart for Nexus
+- Ingress configuration through ALB Controller
 - Jenkins access to Nexus pod/namespace within Kubernetes
 - Security improvements
 - Enable cluster-level logging?

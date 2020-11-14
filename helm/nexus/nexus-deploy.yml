@@ -61,6 +61,7 @@ metadata:
   name: nexus-prd 
   namespace: nexus-prd 
 spec:
+  type: NodePort
   ports:
   - name: http
     port: 8081
@@ -77,6 +78,7 @@ metadata:
   name: docker-reg 
   namespace: nexus-prd 
 spec:
+  type: NodePort
   ports:
   - name: docker-reg 
     port: 5000
@@ -90,15 +92,13 @@ kind: Ingress
 metadata:
   namespace: nexus-prd 
   name: dockr-reg 
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/group.name: lylty-devops-poc
 spec:
   rules:
-  - host: lylty-images.devops-poc.com
+  - host: devops-poc.com
     http:
       paths:
-      - backend:
+      - path: /images
+        backend:
           serviceName: docker-reg 
           servicePort: 5000
 ----
@@ -107,14 +107,12 @@ kind: Ingress
 metadata:
   namespace: nexus-prd 
   name: nexus-admin 
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/group.name: lylty-devops-poc
 spec:
   rules:
-  - host: lylty-nexus.example.com
+  - host: devops-poc.com
     http:
       paths:
-      - backend:
+      - path: /nexus 
+        backend:
           serviceName: nexus-prd 
           servicePort: 8081

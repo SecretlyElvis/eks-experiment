@@ -1,6 +1,6 @@
 # **Basic CI/CD Stand-Alone POC Cluster in EKS**
 
-![Overview diagram](./images/Overview.png)
+![Overview diagram](./images/Overview.jpg)
 
 #### Prerequisites
 - S3 bucket for Terraform state files (configured in 'terraform/backendd.tfvars')

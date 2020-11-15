@@ -48,8 +48,10 @@ Make note of the output vlaues as many are used in subsequent commands:
 ```
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
-helm install devops-poc-ingress haproxytech/kubernetes-ingress \
-    --set controller.service.type=LoadBalancer
+helm install devops-poc-ingress \
+    -f helm/haproxy/haproxy-values.yml \
+    --set controller.service.type=LoadBalancer \
+    haproxytech/kubernetes-ingress
 ```
 
 _Note: HAProxy Ingress Controller watches all namespaces_
@@ -80,7 +82,9 @@ _Optional: update the `installPlugins:` section of `helm/jenkins/jenkins-values.
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
-helm install jenkins-dev -n jenkins-dev -f helm/jenkins/jenkins-values.yml jenkinsci/jenkins
+helm install jenkins-dev -n jenkins-dev \
+    -f helm/jenkins/jenkins-values.yml \
+    jenkinsci/jenkins
 ```
 The server can take several minutes to start up as modules are installed.  Check status with:
 

@@ -404,7 +404,7 @@ master:
     - path: /jenkins
       backend:
         serviceName: jenkins-dev  
-        servicePort: 80
+        servicePort: 8080
     # - backend:
     #     serviceName: ssl-redirect
     #     servicePort: use-annotation

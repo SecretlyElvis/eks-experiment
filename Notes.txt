@@ -96,6 +96,13 @@ helm install haproxy haproxytech/kubernetes-ingress \
 View source YAML:
 kubectl get deployment <deployment> -o yaml
 
+-- HAProxy deployment with additional annotations:
+helm install haproxy-controller \
+Haproxyteach/kubernetes-ingress  \
+  --set controller.service.type=LoadBalancer \
+  --set controller.service.annotations.“servcie\.beta\.kubernetes\.io/aws-load-balancer-internal”=“0.0.0.0/0” \
+  --set controller.service.annotations.”service\.beta\.kubernetes\.io/aws-load-balancer-cross-zone-load-balancing-enabled”=“true”
+
 -- Troubleshooting HAProxy Ingresss Controller:
 https://www.haproxy.com/documentation/kubernetes/latest/usage/troubleshooting/
 

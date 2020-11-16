@@ -55,6 +55,8 @@ helm repo update
 helm install devops-poc-ingress -n devops-poc \
     -f helm/haproxy/haproxy-values.yml \
     --set controller.service.type=LoadBalancer \
+    --set controller.service.annotations."servcie\.beta\.kubernetes\.io/aws-load-balancer-internal"="0.0.0.0/0" \
+    --set controller.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-cross-zone-load-balancing-enabled"="true" \
     haproxytech/kubernetes-ingress
 ```
 

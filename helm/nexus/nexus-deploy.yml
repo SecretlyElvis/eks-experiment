@@ -2,10 +2,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: nexus-prd 
+  name: nexus-prd 
+  namespace: devops-poc  
   labels:
     app: nexus-prd 
-  name: nexus-prd 
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -60,7 +60,7 @@ metadata:
   labels:
     app: nexus-prd 
   name: nexus-prd 
-  namespace: nexus-prd 
+  namespace: devops-poc 
 spec:
   type: NodePort
   ports:
@@ -77,7 +77,7 @@ metadata:
   labels:
     app: docker-reg 
   name: docker-reg 
-  namespace: nexus-prd 
+  namespace: devops-poc 
 spec:
   type: NodePort
   ports:
@@ -91,8 +91,8 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  namespace: nexus-prd 
   name: dockr-reg 
+  namespace: devops-poc 
 spec:
   rules:
   - host: devops-poc.com
@@ -106,8 +106,8 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  namespace: nexus-prd 
   name: nexus-admin 
+  namespace: devops-poc 
 spec:
   rules:
   - host: devops-poc.com

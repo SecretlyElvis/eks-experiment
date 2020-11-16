@@ -84,9 +84,9 @@ controller:
     http: 80
     https: 443
     stat: 1024
-    http: 5000
-    http: 8080
-    http: 8081
+  #  docker-reg: 5000
+  #  jenkins-dev: 8080
+  #  nexus-prd: 8081
 
   ## Controller Container liveness/readiness probe configuration
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/

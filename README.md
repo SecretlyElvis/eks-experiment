@@ -39,6 +39,10 @@ Make note of the output vlaues as many are used in subsequent commands:
 
 5. **Install Required Kubernetes Components**
 
+- Create a namespace for DevOps POC components:
+
+`kubectl create namespace devops-poc`
+
 - Install EFS CSI driver:
 
 `kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"`
@@ -48,19 +52,15 @@ Make note of the output vlaues as many are used in subsequent commands:
 ```
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
-helm install devops-poc-ingress \
+helm install devops-poc-ingress -n devops-poc \
     -f helm/haproxy/haproxy-values.yml \
     --set controller.service.type=LoadBalancer \
     haproxytech/kubernetes-ingress
 ```
 
-_Note: HAProxy Ingress Controller watches all namespaces_
+_Note: To enable debug-level logs, include '--set controller.logging.level=debug' in above command_
 
 6. **Deploy Jenkins (Charts)**
-
-- Create a namespace for the Jenkins DEV deployment:
-
-`kubectl create namespace jenkins-dev`
 
 - Deploy PersistentVolume for Jenkins DEV:
 
@@ -82,13 +82,13 @@ _Optional: update the `installPlugins:` section of `helm/jenkins/jenkins-values.
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
-helm install jenkins-dev -n jenkins-dev \
+helm install jenkins-dev -n devops-poc \
     -f helm/jenkins/jenkins-values.yml \
     jenkinsci/jenkins
 ```
 The server can take several minutes to start up as modules are installed.  Check status with:
 
-`kubectl get pods -n jenkins-dev`
+`kubectl get pods -n devops-poc`
 
 If all was successful, you will see something simi.ar to:
 
@@ -100,15 +100,11 @@ jenkins-dev-64dcc79c5-hc2h5   2/2     Running   0          2m54s
 - Retrieve the generated 'admin' user password for initial access:
 ```
 path="{.data.jenkins-admin-password}"
-secret=$(kubectl get secret -n jenkins-dev jenkins-dev -o jsonpath=$path)
+secret=$(kubectl get secret -n devops-poc jenkins-dev -o jsonpath=$path)
 echo $(echo $secret | base64 -d)
 ```
 
 7. **Deploy Nexus (YAML)**
-
-- Create a namespace for the Nexus PRD deployment:
-
-`kubectl create namespace nexus-prd`
 
 - Make the following replacements in file `helm/jenkins/nexus-pv.yml` and deploy:
 
@@ -125,6 +121,7 @@ echo $(echo $secret | base64 -d)
 #### TODO
 
 - Ingress configuration through AWS ALB Controller (requires update to 'eksctl' to support EKS clusters built by Terraform)
+- Separate applications into distinct namespaces
 - Locate (or build) a suitable Helm Chart for Nexus
 - Jenkins access to Nexus pod/namespace within Kubernetes
 - Security improvements

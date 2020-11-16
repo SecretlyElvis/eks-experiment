@@ -79,11 +79,25 @@ https://quay.io/repository/travelaudience/docker-nexus
 -- Ingress Controllers 101 (HAProxy):
 https://thenewstack.io/kubernetes-ingress-for-beginners/
 
--- Using the HAProxy Ingress controller (good exapmles at the bottom)
+-- Using the HAProxy Ingress controller (good exapmles at the bottom):
 https://www.haproxy.com/documentation/hapee/1-5r2/installation/kubernetes-ingress-controller/
+https://www.ionos.com/community/markdown-migration/configure-and-manage-a-kubernetes-haproxy-ingress-controller/
 
 -- Installing HAProxy Ingress Controller into EKS:
 https://www.haproxy.com/documentation/kubernetes/latest/installation/community/aws/
+
+Troubleshooting:
+kubectl logs <pod>
+
+Install with debug logs:
+helm install haproxy haproxytech/kubernetes-ingress \
+  --set controller.logging.level=debug
+
+View source YAML:
+kubectl get deployment <deployment> -o yaml
+
+-- Troubleshooting HAProxy Ingresss Controller:
+https://www.haproxy.com/documentation/kubernetes/latest/usage/troubleshooting/
 
 Getitng logs from elements in Kubernetes:
 kubectl logs -n kube-system   deployment.apps/aws-load-balancer-controller

@@ -62,10 +62,8 @@ metadata:
   name: nexus-prd 
   namespace: devops-poc 
 spec:
-  type: NodePort
   ports:
-  - name: http
-    port: 8081
+  - port: 8081
     protocol: TCP
     targetPort: 8081
   selector:
@@ -79,29 +77,12 @@ metadata:
   name: docker-reg 
   namespace: devops-poc 
 spec:
-  type: NodePort
   ports:
-  - name: docker-reg 
-    port: 5000
+  - port: 5000
     protocol: TCP
     targetPort: 5000
   selector:
     app: nexus-prd 
----
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: dockr-reg 
-  namespace: devops-poc 
-spec:
-  rules:
-  - host: devops-poc.com
-    http:
-      paths:
-      - path: /images
-        backend:
-          serviceName: docker-reg 
-          servicePort: 5000
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -117,3 +98,18 @@ spec:
         backend:
           serviceName: nexus-prd 
           servicePort: 8081
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: dockr-reg 
+  namespace: devops-poc 
+spec:
+  rules:
+  - host: devops-poc.com
+    http:
+      paths:
+      - path: /images
+        backend:
+          serviceName: docker-reg 
+          servicePort: 5000

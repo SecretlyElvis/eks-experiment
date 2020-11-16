@@ -21,3 +21,12 @@ terraform {
 provider "aws" {
   region = var.region
 }
+
+locals {
+  cluster_name = "devops-poc-${random_string.suffix.result}"
+}
+
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+}

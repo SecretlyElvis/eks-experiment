@@ -1,5 +1,5 @@
-resource "aws_security_group" "worker_group_mgmt_one" {
-  name_prefix = "worker_group_mgmt_one"
+resource "aws_security_group" "devops-poc-app-sg" {
+  name_prefix = "devops-poc-app-sg"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -10,33 +10,6 @@ resource "aws_security_group" "worker_group_mgmt_one" {
 
     cidr_blocks = [
       "10.0.0.0/16",
-    ]
-  }
-
-  ingress {
-    description = "Inbound NFS"
-    from_port   = 2049
-    to_port     = 2049
-    protocol    = "tcp"
-
-    cidr_blocks = [
-      "10.0.0.0/16",
-    ]
-  }
-}
-
-resource "aws_security_group" "worker_group_mgmt_two" {
-  name_prefix = "worker_group_mgmt_two"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress {
-    description = "Inbound SSH"
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "192.168.0.0/16",
     ]
   }
 

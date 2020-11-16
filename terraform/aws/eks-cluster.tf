@@ -12,18 +12,11 @@ module "eks" {
 
   worker_groups = [
     {
-      name                          = "worker-group-1"
-      instance_type                 = "t2.small"
-      additional_userdata           = "echo devops-poc-worker-group"
-      asg_desired_capacity          = 3
-      additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
-    },
-    {
-      name                          = "worker-group-2"
+      name                          = "devops-poc-app-wg"
       instance_type                 = "t2.medium"
-      additional_userdata           = "echo funky pig"
-      additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
-      asg_desired_capacity          = 0
+      additional_userdata           = "echo devops-poc-app-wg"
+      asg_desired_capacity          = 3
+      additional_security_group_ids = [aws_security_group.devops-poc-app-sg.id]
     },
   ]
 }

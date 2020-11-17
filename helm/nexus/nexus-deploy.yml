@@ -91,8 +91,7 @@ metadata:
   namespace: devops-poc 
 spec:
   rules:
-  - host: devops-poc.com
-    http:
+  - http:
       paths:
       - path: /nexus 
         backend:
@@ -106,8 +105,7 @@ metadata:
   namespace: devops-poc 
 spec:
   rules:
-  - host: devops-poc.com
-    http:
+  - http:
       paths:
       - path: /images
         backend:

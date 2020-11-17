@@ -11,7 +11,7 @@ namespaceOverride: devops-poc
 
 # For FQDN resolving of the master service. Change this value to match your existing configuration.
 # ref: https://github.com/kubernetes/dns/blob/master/docs/specification.md
-clusterZone: "devops-poc.com"
+clusterZone: 
 
 renderHelmLabels: true
 
@@ -137,7 +137,7 @@ master:
   # jenkinsOpts: ""
   # jenkinsUrl: ""
   # If you set this prefix and use ingress controller then you might want to set the ingress path below
-  # jenkinsUriPrefix: "/jenkins"
+  jenkinsUriPrefix: "/jenkins"
   # Enable pod security context (must be `true` if runAsUser or fsGroup are set)
   usePodSecurityContext: true
   # Set runAsUser to 1000 to let Jenkins run as non-root user 'jenkins' which exists in 'jenkins/jenkins' docker image.
@@ -152,7 +152,7 @@ master:
   targetPort: 8080
   # For minikube, set this to NodePort, elsewhere use LoadBalancer
   # Use ClusterIP if your setup includes ingress controller
-  serviceType: NodePort 
+  serviceType: ClusterIP 
   # Jenkins master service annotations
   serviceAnnotations: {}
   # Jenkins master custom labels
@@ -404,7 +404,7 @@ master:
     - path: /jenkins
       backend:
         serviceName: jenkins-dev  
-        servicePort: 8080
+        servicePort: 80
     # - backend:
     #     serviceName: ssl-redirect
     #     servicePort: use-annotation
@@ -422,7 +422,7 @@ master:
     # Set this path to jenkinsUriPrefix above or use annotations to rewrite path
     # path: "/jenkins"
     # configures the hostname e.g. jenkins.example.com
-    hostName: devops-poc.com
+    hostName:
     tls:
     # - secretName: jenkins.cluster.local
     #   hosts:

@@ -83,6 +83,10 @@ https://thenewstack.io/kubernetes-ingress-for-beginners/
 https://www.haproxy.com/documentation/hapee/1-5r2/installation/kubernetes-ingress-controller/
 https://www.ionos.com/community/markdown-migration/configure-and-manage-a-kubernetes-haproxy-ingress-controller/
 
+Using YAML files: https://www.haproxy.com/blog/dissecting-the-haproxy-kubernetes-ingress-controller/
+  (includes complete example of application deploy that tests install)
+Using Helm: https://www.haproxy.com/blog/use-helm-to-install-the-haproxy-kubernetes-ingress-controller/
+
 -- Installing HAProxy Ingress Controller into EKS:
 https://www.haproxy.com/documentation/kubernetes/latest/installation/community/aws/
 
@@ -96,6 +100,14 @@ helm install haproxy haproxytech/kubernetes-ingress \
 View source YAML:
 kubectl get deployment <deployment> -o yaml
 
+-- 'Plain vanilla' install of HAProxy Ingress Controller
+
+helm install devops-poc-ingress -n devops-poc \
+    --set controller.logging.level=debug \
+    --set controller.service.type=LoadBalancer \
+    --set-string "controller.config.ssl-redirect=false" \
+    haproxytech/kubernetes-ingress
+
 -- HAProxy deployment with additional annotations:
 helm install haproxy-controller \
 Haproxyteach/kubernetes-ingress  \
@@ -108,6 +120,14 @@ https://www.haproxy.com/documentation/kubernetes/latest/usage/troubleshooting/
 
 Getitng logs from elements in Kubernetes:
 kubectl logs -n kube-system   deployment.apps/aws-load-balancer-controller
+
+Send request with explicit host setting:
+curl -I -H 'Host: foo.bar' 'http://192.168.99.100:30279'
+
+-- Test local web container using docker swarm:
+
+docker swarm init 
+docker service create --publish 8080 jmalloc/echo-server
 
 -- ClusterRole with multiple ApiGroups:
 

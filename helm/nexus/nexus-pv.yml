@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: nexus-prd-pv
-  namespace: devops-poc 
+  namespace: nexus-prd 
 spec:
   storageClassName: nexus-prd-pv
   capacity:
@@ -21,7 +21,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: nexus-prd-pvc
-  namespace: devops-poc 
+  namespace: nexus-prd 
 spec:
   accessModes:
     - ReadWriteMany

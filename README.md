@@ -110,6 +110,10 @@ echo $(echo $secret | base64 -d)
 
 7. **Deploy Nexus (YAML)**
 
+- Create a namespace for Nexus PRD components:
+
+`kubectl create namespace nexus-prd`
+
 - Make the following replacements in file `helm/jenkins/nexus-pv.yml` and deploy:
 
   `<FS_ID>` --> `pstorage-fs_fsid` value from Terraform (*e.g. 'fs-04be623c'*)

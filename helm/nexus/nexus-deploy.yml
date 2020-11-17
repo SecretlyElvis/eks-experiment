@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nexus-prd 
-  namespace: devops-poc  
+  namespace: nexus-prd  
   labels:
     app: nexus-prd 
 spec:
@@ -60,10 +60,10 @@ metadata:
   labels:
     app: nexus-prd 
   name: nexus-prd 
-  namespace: devops-poc 
+  namespace: nexus-prd  
 spec:
   ports:
-  - port: 8081
+  - port: 80
     protocol: TCP
     targetPort: 8081
   selector:
@@ -75,10 +75,10 @@ metadata:
   labels:
     app: docker-reg 
   name: docker-reg 
-  namespace: devops-poc 
+  namespace: nexus-prd 
 spec:
   ports:
-  - port: 5000
+  - port: 80
     protocol: TCP
     targetPort: 5000
   selector:
@@ -88,7 +88,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: nexus-admin 
-  namespace: devops-poc 
+  namespace: nexus-prd 
 spec:
   rules:
   - http:
@@ -96,13 +96,13 @@ spec:
       - path: /nexus 
         backend:
           serviceName: nexus-prd 
-          servicePort: 8081
+          servicePort: 80
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: dockr-reg 
-  namespace: devops-poc 
+  namespace: nexus-prd 
 spec:
   rules:
   - http:
@@ -110,4 +110,4 @@ spec:
       - path: /images
         backend:
           serviceName: docker-reg 
-          servicePort: 5000
+          servicePort: 80

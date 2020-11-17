@@ -53,9 +53,7 @@ Make note of the output vlaues as many are used in subsequent commands:
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
 helm repo update
 helm install devops-poc-ingress -n devops-poc \
-    -f helm/haproxy/haproxy-values.yml \
     --set controller.service.type=LoadBalancer \
-    --set controller.service.annotations."servcie\.beta\.kubernetes\.io/aws-load-balancer-internal"="0.0.0.0/0" \
     --set controller.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-cross-zone-load-balancing-enabled"="true" \
     haproxytech/kubernetes-ingress
 ```
@@ -63,6 +61,10 @@ helm install devops-poc-ingress -n devops-poc \
 _Note: To enable debug-level logs, include '--set controller.logging.level=debug' in above command_
 
 6. **Deploy Jenkins (Charts)**
+
+- Create a namespace for Jenkins DEV components:
+
+`kubectl create namespace jenkins-dev`
 
 - Deploy PersistentVolume for Jenkins DEV:
 
@@ -84,13 +86,13 @@ _Optional: update the `installPlugins:` section of `helm/jenkins/jenkins-values.
 ```
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
-helm install jenkins-dev -n devops-poc \
+helm install jenkins-dev -n jenkins-dev \
     -f helm/jenkins/jenkins-values.yml \
     jenkinsci/jenkins
 ```
 The server can take several minutes to start up as modules are installed.  Check status with:
 
-`kubectl get pods -n devops-poc`
+`kubectl get pods -n jenkins-dev`
 
 If all was successful, you will see something simi.ar to:
 
@@ -102,7 +104,7 @@ jenkins-dev-64dcc79c5-hc2h5   2/2     Running   0          2m54s
 - Retrieve the generated 'admin' user password for initial access:
 ```
 path="{.data.jenkins-admin-password}"
-secret=$(kubectl get secret -n devops-poc jenkins-dev -o jsonpath=$path)
+secret=$(kubectl get secret -n jenkins-dev jenkins-dev -o jsonpath=$path)
 echo $(echo $secret | base64 -d)
 ```
 

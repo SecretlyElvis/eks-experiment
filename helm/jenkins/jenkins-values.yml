@@ -238,7 +238,7 @@ master:
   # - name: BuildInfoProxy
   #   port: 9000
 
-  # List of plugins to be install during Jenkins master start
+  # List of plugins to be installed during Jenkins master start
   installPlugins:
     - kubernetes:1.25.7
     - workflow-job:2.39

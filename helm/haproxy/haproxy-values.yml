@@ -38,7 +38,7 @@ rbac:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
 serviceAccount:
   create: true
-  name:
+  name: devops-poc-proxy-sa
 
 
 ## Controller default values

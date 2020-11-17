@@ -1,10 +1,16 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-app
+  
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     run: app
   name: app
-  namespace: devops-poc
+  namespace: test-app
 spec:
   replicas: 2
   selector:
@@ -28,7 +34,7 @@ metadata:
   labels:
     run: app
   name: app
-  namespace: devops-poc
+  namespace: test-app
   annotations:
     haproxy.org/check: "enabled"
     haproxy.org/forwarded-for: "enabled"
@@ -47,7 +53,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: web-ingress
-  namespace: devops-poc
+  namespace: test-app
 spec:
   rules:
   - http:
@@ -56,14 +62,3 @@ spec:
         backend:
           serviceName: app
           servicePort: 80
-
-
-#spec:
-#  rules:
-#  - host: devops-poc.com
-#    http:
-#      paths:
-#      - path: /test
-#        backend:
-#          serviceName: app
-#          servicePort: 80

@@ -55,6 +55,14 @@ https://www.sonatype.com/press-release-blog/sonatype-adds-native-helm-support
 
 Possible chart option (Otemo -- GCP-specific):
 https://github.com/Oteemo/charts
+Docs: https://artifacthub.io/packages/helm/oteemo-charts/sonatype-nexus
+
+helm repo add oteemocharts https://oteemo.github.io/charts
+helm install sonatype-nexus -n devops-poc \
+  --set ingress.enabled="true" \
+  --set ingress.path="/nexus" \
+  --set persistence.existingClaim="nexus-prd-pvc" \
+  oteemocharts/sonatype-nexus
 
 Kubernetes Nexus:
 https://github.com/travelaudience/kubernetes-nexus#pre-requisites
@@ -73,6 +81,8 @@ https://hub.docker.com/r/sonatype/nexus3
 
 TravelAudience Nexus Repository Docker Image:
 https://quay.io/repository/travelaudience/docker-nexus
+
+Setting for 'ingress.path' can be changed in otemo chart (need to find out how to do it as a straight container)
 
 #### RESOURCES ####
 

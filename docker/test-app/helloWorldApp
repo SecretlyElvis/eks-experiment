@@ -1,0 +1,52 @@
+var http = require('http')
+var fs = require('fs')
+
+http.createServer(onRequest).listen(8080);
+console.log('Server has started');
+
+function onRequest(request, response){
+  // Increment reqCount
+  var options = {encoding:'utf-8', flag:'r'};
+  var buffer = fs.readFileSync('./reqCount', options);
+  buffer = parseInt(buffer, 10) + 1;
+
+  // Write Incremented Value back to file
+  options = {encoding:'utf-8', flag:'w'};
+  fs.writeFileSync('./reqCount', buffer.toString(), options);
+
+  response.writeHead(200);
+  response.write(
+`<html>
+    <body bgcolor="#333333">
+        <div align="center">
+            <p>
+                <h1><strong>
+                    <span style="color: #ffffff">&lt;</span>
+                    <span style="color: #ff3366">Mega-basic&nbsp;</span>
+                    <span style="color: #99cc33">Test App!</span>
+                    <span style="color: #ffffff">/&gt;</span>
+                </strong></h1>
+            </p>
+            <h2>
+                <span style="color: #777777;">
+                    Container ID:&nbsp;
+                </span>
+                <span style="color: #999999"><strong>` +
+                process.env.HOSTNAME
++ `                </strong></span>
+            </h2>
+            <h3>
+                <span style="color: #777777;">
+                    // TODO: replace 'TEST APP 1' w/ ENV so a value can be passed in during build
+                    TEST APP 1:  No. of Requests:&nbsp;
+                </span>
+                <span style="color: #999999"><strong>` +
+                        buffer
++ `                </strong></span>
+            </h3>
+        </div>
+    </body>
+</html>`);
+  response.end();
+}
+

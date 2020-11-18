@@ -1,0 +1,128 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-app
+  
+---
+#### TEST APP 1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: app-1
+  name: app-1
+  namespace: test-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: app-1
+  template:
+    metadata:
+      labels:
+        run: app-1
+    spec:
+      containers:
+      - name: app-1
+        image: secretlyelvis/helloworld:test1
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: app-1
+  name: app-1
+  namespace: test-app
+  annotations:
+    haproxy.org/check: "enabled"
+    haproxy.org/forwarded-for: "enabled"
+    haproxy.org/load-balance: "roundrobin"
+spec:
+  selector:
+    run: app-1
+  ports:
+  - name: port-1
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: web-ingress
+  namespace: test-app
+spec:
+  rules:
+  - http:
+      paths:
+      - host: test1.devops-poc.com
+        path: /
+        backend:
+          serviceName: app-1
+          servicePort: 80
+
+---
+#### TEST APP 2
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: app-2
+  name: app-2
+  namespace: test-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: app-2
+  template:
+    metadata:
+      labels:
+        run: app-2
+    spec:
+      containers:
+      - name: app-2
+        image: secretlyelvis/helloworld:test2
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: app-2
+  name: app-2
+  namespace: test-app
+  annotations:
+    haproxy.org/check: "enabled"
+    haproxy.org/forwarded-for: "enabled"
+    haproxy.org/load-balance: "roundrobin"
+spec:
+  selector:
+    run: app-2
+  ports:
+  - name: port-2
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: web-ingress
+  namespace: test-app
+spec:
+  rules:
+  - http:
+      paths:
+      - host: test2.devops-poc.com
+        path: /
+        backend:
+          serviceName: app-2
+          servicePort: 80

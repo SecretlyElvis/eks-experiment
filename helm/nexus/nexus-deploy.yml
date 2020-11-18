@@ -93,7 +93,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /nexus 
+      - path: / 
         backend:
           serviceName: nexus-prd 
           servicePort: 80

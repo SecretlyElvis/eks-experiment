@@ -101,6 +101,8 @@ NAME                          READY   STATUS    RESTARTS   AGE
 jenkins-dev-64dcc79c5-hc2h5   2/2     Running   0          2m54s
 ```
 
+_Note: Jenkins is installed under the path '/jenkins'.  To access, visit '<LB_URL>/jenkins'_
+
 - Retrieve the generated 'admin' user password for initial access:
 ```
 path="{.data.jenkins-admin-password}"
@@ -126,11 +128,19 @@ echo $(echo $secret | base64 -d)
 
 `kubectl apply -f helm/nexus/nexus-deploy.yml`
 
+_Note: Nexus is installed under the path '/'.  To access, visit '<LB_URL>/'_
+
 #### TODO
 
-- Ingress configuration through AWS ALB Controller (requires update to 'eksctl' to support EKS clusters built by Terraform)
-- Separate applications into distinct namespaces
+- Adapt codebase to accomodate existing VPC & Subnets
+- Deploy into Loyalty AWS
+- Explore routing based on subdomain rather than path (Nexus only works on /)
+- Configure SSL-redirect, certificate for all services
+- Account setup
+- First docker image build via Jenkins
+- Ingress configuration through AWS ALB Controller
 - Locate (or build) a suitable Helm Chart for Nexus
 - Jenkins access to Nexus pod/namespace within Kubernetes
 - Security improvements
 - Enable cluster-level logging?
+- Decision: separate load balancers (to enable individual security config)?

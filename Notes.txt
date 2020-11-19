@@ -3,8 +3,14 @@ https://github.com/SecretlyElvis/eks-experiment.git
 
 ### AWS | resources
 
+AWS Load Balancer Controller Helm Chart:
+https://github.com/aws/eks-charts/tree/master/stable/aws-load-balancer-controller
+https://artifacthub.io/packages/helm/aws/aws-load-balancer-controller
+https://github.com/aws/eks-charts/tree/master/stable/aws-load-balancer-controller
+
 ALB Ingress Controller for EKS:
 https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html
+https://kubernetes-sigs.github.io/aws-load-balancer-controller/guide/ingress/annotations/
 
 Annotations for ALB Ingress controller:
 kubernetes.io/ingress.class: alb

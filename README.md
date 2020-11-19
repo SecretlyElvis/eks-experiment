@@ -64,6 +64,51 @@ _Note: To enable debug-level logs, include '--set controller.logging.level=debug
 
 _Note: 'eksctl' version must be 0.32.0-rc.0 or later (including feature #2775)_
 
+- Create an IAM OIDC provider and associate it with your cluster:
+
+```
+eksctl utils associate-iam-oidc-provider \
+    --region <region> \
+    --cluster <cluster_name> \
+    --approve
+```
+
+- Note: the IAM policy `alb-ingress-controller-policy` was created as part of infrastructure standup.
+
+- Create an IAM role and Kubernetes service account named `aws-load-balancer-controller` in the kube-system namespace, a cluster role, and a cluster role binding for the load balancer controller to use with the following command. 
+
+```
+eksctl create iamserviceaccount \
+  --cluster = <cluster_name> \
+  --namespace = kube-system \
+  --name = aws-load-balancer-controller \
+  --attach-policy-arn = <alb-policy-arn> \
+  --override-existing-serviceaccounts \
+  --approve
+```
+
+- Install the TargetGroupBinding custom resource definitions.
+
+`kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"`
+
+- Install the AWS Load Balancer Controller via Helm:
+
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+helm upgrade -i aws-load-balancer-controller -n kube-system \
+  --set clusterName = <cluster-name> \
+  --set serviceAccount.create = false \
+  --set serviceAccount.name = aws-load-balancer-controller \
+  eks/aws-load-balancer-controller
+```
+
+_Note: additional configuration parameters can be found here: https://github.com/aws/eks-charts/tree/master/stable/aws-load-balancer-controller_
+
+- Verify installation:
+
+`kubectl get deployment -n kube-system aws-load-balancer-controller`
+
 6. **Deploy Jenkins (Charts)**
 
 - Create a namespace for Jenkins DEV components:

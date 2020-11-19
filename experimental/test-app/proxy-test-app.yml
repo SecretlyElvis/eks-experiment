@@ -36,11 +36,8 @@ metadata:
     run: app-1
   name: app-1
   namespace: test-app
-  annotations:
-    haproxy.org/check: "enabled"
-    haproxy.org/forwarded-for: "enabled"
-    haproxy.org/load-balance: "roundrobin"
 spec:
+  type: NodePort
   selector:
     run: app-1
   ports:
@@ -101,11 +98,8 @@ metadata:
     run: app-2
   name: app-2
   namespace: test-app
-  annotations:
-    haproxy.org/check: "enabled"
-    haproxy.org/forwarded-for: "enabled"
-    haproxy.org/load-balance: "roundrobin"
 spec:
+  type: NodePort
   selector:
     run: app-2
   ports:

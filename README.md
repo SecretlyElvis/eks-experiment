@@ -8,7 +8,7 @@
 - AWS account with appropraite permissions for infrastructure deployment
 ## **Utilizing this Repo**
 Clone repo and change to directory just above `eks-experiment`
-1. **Run Docker Container with Terraform 13.x / Kubectl / Helm / AWS CLI**
+1. **Run Docker Container with Terraform 13.x / Kubectl / Helm / AWS CLI / eksctl**
 
 `docker run -u 1000:1000 -v $(pwd)/eks-experiment:/opt/app/eks -it secretlyelvis/devops-poc:tf13`
 
@@ -62,15 +62,7 @@ _Note: To enable debug-level logs, include '--set controller.logging.level=debug
 
 - **OPTION 2:** Install ALB Ingress Controller:
 
-```
-helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
-helm repo update
-helm install  --name devops-poc-ingress --namespace kube-system \
-  --set clusterName=MyClusterName \
-  --set autoDiscoverAwsRegion=true \
-  --set autoDiscoverAwsVpcID=true \
-  incubator/aws-alb-ingress-controller
-```
+_Note: 'eksctl' version must be 0.32.0-rc.0 or later (including feature #2775)_
 
 6. **Deploy Jenkins (Charts)**
 

@@ -38,7 +38,6 @@ https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/0338ed144f5
 - New IAM permission is required even no wafv2 annotation is used.
 - WAFV2 support can be disabled by controller flags --feature-gates=wafv2=false
 
-
 ### HELM | Jenkins
 
 Official Jenkins.io Installing Jenkins on Kubernetes:

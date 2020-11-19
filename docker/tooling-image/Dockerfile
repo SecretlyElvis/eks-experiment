@@ -68,8 +68,9 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL
   chmod +x ./kubectl && \
   mv ./kubectl /usr/local/bin/
 
-# EKSCTL Installation
-RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C ./ && \
+# EKSCTL Version: https://github.com/weaveworks/eksctl/releases/
+ENV EKSCTL_VERSION=0.32.0-rc.0
+RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/${EKSCTL_VERSION}/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C ./ && \
   chmod +x ./eksctl && \
   mv ./eksctl /usr/local/bin
 

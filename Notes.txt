@@ -14,11 +14,30 @@ alb.ingress.kubernetes.io/group.order: <'10'> (to order rules, lower numbers eva
 When defining the load balancer, specify 'Instance' traffic mode (routes to node, then proxies to pods) 
 alb.ingress.kubernetes.io/target-type: instance
 
+NOTE: Your Kubernetes service must specify the NodePort type to use this traffic mode.
+
 Ingress Annotation list:
 https://kubernetes-sigs.github.io/aws-load-balancer-controller/guide/ingress/annotations/
 
 Ingress IAM policy (downloaded and installed for ALB):
 https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2_ga/docs/install/iam_policy.json
+
+### HELM | ALB Ingress Controller (deprecated as of 13-Nov-2020)
+
+https://github.com/helm/charts/tree/master/incubator
+
+Installation:
+* helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+* helm install incubator/aws-alb-ingress-controller --set clusterName=MyClusterName --set autoDiscoverAwsRegion=true --set autoDiscoverAwsVpcID=true --name my-release --namespace kube-system
+
+- Additional notes for upgrading to v1.0.2:
+https://github.com/kubernetes-sigs/aws-load-balancer-controller
+https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/master/docs/guide/ingress/annotation.md#wafv2
+https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/0338ed144f584c7a7738b4bf1d8ca8c827e7abb0/docs/examples/iam-policy.json#L117-L126
+
+- New IAM permission is required even no wafv2 annotation is used.
+- WAFV2 support can be disabled by controller flags --feature-gates=wafv2=false
+
 
 ### HELM | Jenkins
 

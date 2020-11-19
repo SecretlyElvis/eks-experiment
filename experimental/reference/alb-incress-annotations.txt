@@ -1,0 +1,37 @@
+Annotations
+Name 	                                                    Type 	Default 	Location 	MergeBehavior
+alb.ingress.kubernetes.io/group.name 	                    string 	N/A 	Ingress 	N/A
+alb.ingress.kubernetes.io/group.order 	                    integer 	0 	Ingress 	N/A
+alb.ingress.kubernetes.io/tags 	stringMap 	                N/A 	Ingress,Service 	Merge
+alb.ingress.kubernetes.io/ip-address-type 	                ipv4 | dualstack 	ipv4 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/scheme 	                        internal | internet-facing 	internal 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/subnets 	                        stringList 	N/A 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/security-groups 	                stringList 	N/A 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/load-balancer-attributes 	        stringMap 	N/A 	Ingress 	Merge
+alb.ingress.kubernetes.io/wafv2-acl-arn 	                string 	N/A 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/waf-acl-id 	                    string 	N/A 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/shield-advanced-protection 	    boolean 	N/A 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/listen-ports 	                    json 	'[{"HTTP": 80}]' | '[{"HTTPS": 443}]' 	Ingress 	Merge
+alb.ingress.kubernetes.io/inbound-cidrs 	                stringList 	0.0.0.0/0, ::/0 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/certificate-arn 	                stringList 	N/A 	Ingress 	Merge
+alb.ingress.kubernetes.io/ssl-policy 	                    string 	ELBSecurityPolicy-2016-08 	Ingress 	Exclusive
+alb.ingress.kubernetes.io/target-type 	                    instance | ip 	instance 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/backend-protocol 	                HTTP | HTTPS 	HTTP 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/target-group-attributes 	        stringMap 	N/A 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/healthcheck-port 	                integer | traffic-port 	traffic-port 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/healthcheck-protocol 	            HTTP | HTTPS 	HTTP 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/healthcheck-path 	                string 	/ 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/healthcheck-interval-seconds 	    integer 	'15' 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/healthcheck-timeout-seconds 	    integer 	'5' 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/healthy-threshold-count 	        integer 	'2' 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/unhealthy-threshold-count 	    integer 	'2' 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/success-codes 	                string 	'200' 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/auth-type 	                    none|oidc|cognito 	none 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/auth-idp-cognito 	                json 	N/A 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/auth-idp-oidc 	                json 	N/A 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/auth-on-unauthenticated-request 	authenticate|allow|deny 	authenticate 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/auth-scope 	                    string 	openid 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/auth-session-cookie 	            string 	AWSELBAuthSessionCookie 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/auth-session-timeout 	            integer 	'604800' 	Ingress,Service 	N/A
+alb.ingress.kubernetes.io/actions.${action-name} 	        json 	N/A 	Ingress 	N/A
+alb.ingress.kubernetes.io/conditions.${conditions-name} 	json 	N/A 	Ingress 	N/A

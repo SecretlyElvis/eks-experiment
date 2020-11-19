@@ -1,3 +1,6 @@
+# IAM Policy definition drawn from AWS documentation at the following URL:
+#    https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html
+
 resource "aws_iam_policy" "alb-ingress-controller" {
   name        = "alb-ingress-controller-policy"
   path        = "/"

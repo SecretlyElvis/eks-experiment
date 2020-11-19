@@ -47,7 +47,7 @@ Make note of the output vlaues as many are used in subsequent commands:
 
 `kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.0"`
 
-- Install HAProxy Ingress Controller:
+- **OPTION 1:** Install HAProxy Ingress Controller:
 
 ```
 helm repo add haproxytech https://haproxytech.github.io/helm-charts
@@ -59,6 +59,18 @@ helm install devops-poc-ingress -n devops-poc \
 ```
 
 _Note: To enable debug-level logs, include '--set controller.logging.level=debug' in above command_
+
+- **OPTION 2:** Install ALB Ingress Controller:
+
+```
+helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+helm repo update
+helm install  --name devops-poc-ingress --namespace kube-system \
+  --set clusterName=MyClusterName \
+  --set autoDiscoverAwsRegion=true \
+  --set autoDiscoverAwsVpcID=true \
+  incubator/aws-alb-ingress-controller
+```
 
 6. **Deploy Jenkins (Charts)**
 

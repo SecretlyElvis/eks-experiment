@@ -55,6 +55,9 @@ kind: Ingress
 metadata:
   name: web-ingress
   namespace: test-app
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/group.name: testApp
 spec:
   rules:
   - http:
@@ -117,6 +120,9 @@ kind: Ingress
 metadata:
   name: web-ingress
   namespace: test-app
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/group.name: testApp
 spec:
   rules:
   - http:

@@ -36,8 +36,12 @@ metadata:
     run: app-1
   name: app-1
   namespace: test-app
+  annotations:
+    haproxy.org/check: "enabled"
+    haproxy.org/forwarded-for: "enabled"
+    haproxy.org/load-balance: "roundrobin"
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     run: app-1
   ports:
@@ -50,17 +54,18 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: web-ingress
+  name: test-ingress1
   namespace: test-app
   annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/group.name: testApp
+#    haproxy.org/set-host: "test1.devops-poc.com"
+#    kubernetes.io/ingress.class: alb
+#    alb.ingress.kubernetes.io/group.name: testApp
 spec:
   rules:
-  - http:
+  - host: test1.devops-poc.com
+    http:
       paths:
-      - host: test1.devops-poc.com
-        path: /
+      - path: /
         backend:
           serviceName: app-1
           servicePort: 80
@@ -98,8 +103,12 @@ metadata:
     run: app-2
   name: app-2
   namespace: test-app
+  annotations:
+    haproxy.org/check: "enabled"
+    haproxy.org/forwarded-for: "enabled"
+    haproxy.org/load-balance: "roundrobin"
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     run: app-2
   ports:
@@ -112,17 +121,18 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: web-ingress
+  name: test-ingress2
   namespace: test-app
   annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/group.name: testApp
+#    haproxy.org/set-host: "test2.devops-poc.com"
+#    kubernetes.io/ingress.class: alb
+#    alb.ingress.kubernetes.io/group.name: testApp
 spec:
   rules:
-  - http:
+  - host: test2.devops-poc.com
+    http:
       paths:
-      - host: test2.devops-poc.com
-        path: /
+      - path: /
         backend:
           serviceName: app-2
           servicePort: 80

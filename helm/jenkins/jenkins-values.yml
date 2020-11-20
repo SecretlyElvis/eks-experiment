@@ -154,7 +154,10 @@ master:
   # Use ClusterIP if your setup includes ingress controller
   serviceType: ClusterIP 
   # Jenkins master service annotations
-  serviceAnnotations: {}
+  serviceAnnotations:
+    haproxy.org/check: "enabled"
+    haproxy.org/forwarded-for: "enabled"
+    haproxy.org/load-balance: "roundrobin"
   # Jenkins master custom labels
   deploymentLabels: {}
   #   foo: bar

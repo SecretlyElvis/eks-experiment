@@ -61,6 +61,10 @@ metadata:
     app: nexus-prd 
   name: nexus-prd 
   namespace: nexus-prd  
+  annotations:
+    haproxy.org/check: "enabled"
+    haproxy.org/forwarded-for: "enabled"
+    haproxy.org/load-balance: "roundrobin"
 spec:
   ports:
   - port: 80
@@ -76,6 +80,10 @@ metadata:
     app: docker-reg 
   name: docker-reg 
   namespace: nexus-prd 
+  annotations:
+    haproxy.org/check: "enabled"
+    haproxy.org/forwarded-for: "enabled"
+    haproxy.org/load-balance: "roundrobin"
 spec:
   ports:
   - port: 80

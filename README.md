@@ -183,10 +183,9 @@ _Note: Nexus is installed under the path '/'.  To access, visit '<LB_URL>/'_
 
 - Adapt codebase to accomodate existing VPC & Subnets
 - Deploy into Loyalty AWS
-- Explore routing based on subdomain rather than path (Nexus only works on /)
 - Configure SSL-redirect, certificate for all services
 - Account setup
-- First docker image build via Jenkins
+- Migrate an example docker image build from TravisCI to Jenkins
 - Ingress configuration through AWS ALB Controller
 - Locate (or build) a suitable Helm Chart for Nexus
 - Jenkins access to Nexus pod/namespace within Kubernetes

@@ -91,9 +91,10 @@ metadata:
   namespace: nexus-prd 
 spec:
   rules:
-  - http:
+  - host: nexus.devops-poc.com
+    http:
       paths:
-      - path: / 
+      - path: /
         backend:
           serviceName: nexus-prd 
           servicePort: 80
@@ -102,12 +103,13 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: dockr-reg 
-  namespace: nexus-prd 
+  namespace: nexus-prd
 spec:
   rules:
-  - http:
+  - host: images.devops-poc.com
+    http:
       paths:
-      - path: /images
+      - path: /
         backend:
           serviceName: docker-reg 
           servicePort: 80

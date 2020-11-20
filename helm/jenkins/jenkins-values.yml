@@ -103,7 +103,7 @@ master:
   # If you disable the non-Jenkins identity store and instead use the Jenkins internal one,
   # you should revert master.adminUser to your preferred admin user:
   adminUser: "admin"
-  adminPassword:
+  # adminPassword: <defaults to random>
   admin:
     existingSecret: ""
     userKey: jenkins-admin-user
@@ -137,7 +137,7 @@ master:
   # jenkinsOpts: ""
   # jenkinsUrl: ""
   # If you set this prefix and use ingress controller then you might want to set the ingress path below
-  jenkinsUriPrefix: "/jenkins"
+  # jenkinsUriPrefix:
   # Enable pod security context (must be `true` if runAsUser or fsGroup are set)
   usePodSecurityContext: true
   # Set runAsUser to 1000 to let Jenkins run as non-root user 'jenkins' which exists in 'jenkins/jenkins' docker image.
@@ -401,7 +401,7 @@ master:
     enabled: true
     # Override for the default paths that map requests to the backend
     paths:
-    - path: /jenkins
+    - path: /
       backend:
         serviceName: jenkins-dev  
         servicePort: 80
@@ -417,12 +417,13 @@ master:
     apiVersion: "networking.k8s.io/v1beta1"
     labels: {}
     annotations: {}
+    # haproxy.org/path-rewrite: /jenkins/(.*) /\1
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     # Set this path to jenkinsUriPrefix above or use annotations to rewrite path
     # path: "/jenkins"
     # configures the hostname e.g. jenkins.example.com
-    hostName:
+    hostName: jenkins.devops-poc.com
     tls:
     # - secretName: jenkins.cluster.local
     #   hosts:

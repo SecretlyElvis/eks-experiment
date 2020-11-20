@@ -60,9 +60,9 @@ helm install devops-poc-ingress -n devops-poc \
 
 _Note: To enable debug-level logs, include '--set controller.logging.level=debug' in above command_
 
-- **OPTION 2:** Install ALB Ingress Controller:
+- **OPTION 2:** Install AWS ALB Ingress Controller:
 
-_Note: 'eksctl' version must be 0.32.0-rc.0 or later (including feature #2775)_
+_Note: As of 20-Nov-2020, latest 'eksctl' version (0.32.0-rc.0, including feature #2775) still throws an error on 'create iamserviceaccount'_
 
 - Create an IAM OIDC provider and associate it with your cluster:
 
@@ -75,7 +75,7 @@ eksctl utils associate-iam-oidc-provider \
 
 - Note: the IAM policy `alb-ingress-controller-policy` was created as part of infrastructure standup.
 
-- Create an IAM role and Kubernetes service account named `aws-load-balancer-controller` in the kube-system namespace, a cluster role, and a cluster role binding for the load balancer controller to use with the following command. 
+- Create an IAM role and Kubernetes service account named `aws-load-balancer-controller` in the kube-system namespace, a cluster role, and a cluster role binding for the load balancer controller to use with the following command: 
 
 ```
 eksctl create iamserviceaccount \

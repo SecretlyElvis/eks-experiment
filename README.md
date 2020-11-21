@@ -62,7 +62,7 @@ _Note: To enable debug-level logs, include '--set controller.logging.level=debug
 
 - **OPTION 2:** Install AWS ALB Ingress Controller:
 
-_Note: As of 20-Nov-2020, latest 'eksctl' version (0.32.0-rc.0, including feature #2775) still throws an error on 'create iamserviceaccount'_
+_Note: Requires 'eksctl' version 0.32.0 or later (including feature fix #2775)_
 
 - Create an IAM OIDC provider and associate it with your cluster:
 
@@ -79,10 +79,10 @@ eksctl utils associate-iam-oidc-provider \
 
 ```
 eksctl create iamserviceaccount \
-  --cluster = <cluster_name> \
-  --namespace = kube-system \
-  --name = aws-load-balancer-controller \
-  --attach-policy-arn = <alb-policy-arn> \
+  --cluster=<cluster_name> \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --attach-policy-arn=<alb-policy-arn> \
   --override-existing-serviceaccounts \
   --approve
 ```

@@ -28,16 +28,11 @@ https://kubernetes-sigs.github.io/aws-load-balancer-controller/guide/ingress/ann
 Ingress IAM policy (downloaded and installed for ALB):
 https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2_ga/docs/install/iam_policy.json
 
-20-Nov-2020 -- still have an issue with 'eksctl': 0.32.0-rc.0
+Required Tags for Using the ALB Ingress Controller:
+https://docs.aws.amazon.com/eks/latest/userguide/network_reqs.html#vpc-subnet-tagging
 
-bash-5.0$ eksctl create iamserviceaccount \
->   --name = "aws-load-balancer-controller" \
->   --cluster = "devops-poc-Xu4ZleEH" \
->   --namespace = "kube-system" \
->   --attach-policy-arn = "arn:aws:iam::339285943866:policy/alb-ingress-controller-policy" \
->   --override-existing-serviceaccounts \
->   --approve
-[✖]  only one argument is allowed to be used as a name
+Test app for ALB Ingress Controller (posted 02-Oct by AWS):
+https://aws.amazon.com/premiumsupport/knowledge-center/eks-alb-ingress-controller-setup/
 
 ### HELM | ALB Ingress Controller (deprecated as of 13-Nov-2020)
 

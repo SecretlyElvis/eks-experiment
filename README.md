@@ -143,14 +143,12 @@ The server can take several minutes to start up as modules are installed.  Check
 
 `kubectl get pods -n jenkins-dev`
 
-If all was successful, you will see something simi.ar to:
+If all was successful, you will see something similar to:
 
 ```
 NAME                          READY   STATUS    RESTARTS   AGE
 jenkins-dev-64dcc79c5-hc2h5   2/2     Running   0          2m54s
 ```
-
-_Note: Jenkins is installed under the path '/jenkins'.  To access, visit '<LB_URL>/jenkins'_
 
 - Retrieve the generated 'admin' user password for initial access:
 ```
@@ -176,8 +174,6 @@ echo $(echo $secret | base64 -d)
 - Deploy the Nexus applicatoni stack:
 
 `kubectl apply -f helm/nexus/nexus-deploy.yml`
-
-_Note: Nexus is installed under the path '/'.  To access, visit '<LB_URL>/'_
 
 #### TODO
 

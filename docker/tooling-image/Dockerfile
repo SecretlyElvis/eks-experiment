@@ -9,7 +9,7 @@
 #  - EKSCtl CLI
 #
 # Note: software versions are latest as of 05-Nov-2020
-# Maintainer:  Daniel Auld | NeuralEssence LTD
+# Maintainer: Daniel Auld | NeuralEssence LTD
 
 FROM golang:alpine as build
 
@@ -37,7 +37,7 @@ RUN curl -o helm-package.tgz https://get.helm.sh/helm-${HELM_VERSION}-linux-amd6
 # we start again with the base image and only copy over the desired binaries
 
 FROM node:lts-alpine
-MAINTAINER "Daniel Auld | NeuralEssence LTD"
+LABEL maintainer="Daniel Auld | NeuralEssence LTD"
 
 # AWS CLI Latest Release: https://github.com/aws/aws-cli/releases
 ENV AWSCLI_VERSION=1.18.171

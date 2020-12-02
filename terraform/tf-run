@@ -8,14 +8,6 @@
 # for use in Docker containers or via CLI #
 ###########################################
 
-CMD=${1:---help}
-DIR=${2:-aws}
-planfile="devops-poc.tfplan"
-
-# Uncomment the following lines to enable debugging
-# export TF_LOG=TRACE
-# export TF_LOG_PATH=./tflog
-
 if [ "$#" -lt 1 ]; then
     echo "
         Usage:
@@ -26,9 +18,29 @@ if [ "$#" -lt 1 ]; then
            * Dir == Terraform configuration directory to execute
 	
         Example: 
-         $0 init aws"
+         $0 init aws/"
     exit 0
 fi
+
+CMD=${1:---help}
+DIR=${2:-"NODIR"}
+# RAND=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1) # not compatible with OS X
+PLANFILE="tfplan-current.tfplan"
+VARSFILE=""
+
+# Add trailing slash to $DIR if not already there
+length=${#DIR}
+last_char=${DIR:length-1:1}
+[[ $last_char != "/" ]] && DIR="$DIR/"; :
+
+# Include config file in Terraform commands if it exists
+if [[ -f "${DIR}config.tfvars" ]]; then
+    VARSFILE=" -var-file=$DIR/config.tfvars"
+fi
+
+# Uncomment the following lines to enable debugging
+# export TF_LOG=TRACE
+# export TF_LOG_PATH=./tflog
 
 echo "Execution Start..."
 echo "- Terraform command:  $CMD"
@@ -41,16 +53,16 @@ case $CMD in
         ;;
 
     plan)
-	terraform plan -refresh=true "-out=${planfile}" $DIR
+	terraform plan ${VARSFILE} -refresh=true -lock=true "-out=${PLANFILE}" $DIR
 	;;
 
     apply)
-	terraform apply -auto-approve "./${planfile}"
-    rm "./${planfile}"
+	terraform apply -auto-approve -lock=true "./${PLANFILE}"
+    rm "./${PLANFILE}"
 	;;
 
     destroy)
-	terraform destroy -auto-approve -refresh=true $DIR
+	terraform destroy ${VARSFILE} -auto-approve -refresh=true -lock=true $DIR
 	;;
 
     *)

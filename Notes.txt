@@ -225,3 +225,247 @@ https://stackoverflow.com/questions/60609820/how-to-use-amazon-efs-with-eks-in-t
 * Getting information from containers that are stuck in 'init' stage:
 kubectl get pod nginx --template '{{.status.initContainerStatuses}}'
 
+===================== STUFF FOR SAMPLE JENKINS PIPELINE ========================
+
+STEPS FROM "SERVICE_PURCHASE":
+
+#
+language: ruby
+cache: bundler
+
+rvm:
+  - 2.5.1
+
+addons:
+  postgresql: "9.4" # (...or later)
+
+# http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
+#
+sudo: false
+
+# Fix for bundler 2.0 (which tries to exec the exact version listed in Gemfile.lock under BUNDLED WITH)
+# the travis test runner probably doesn't have this installed. We'll install it and rubygems 3.0+
+# see: https://bundler.io/v2.0/guides/bundler_2_upgrade.html
+before_install:
+  - gem update --system
+  - bundler_version=$(grep -A 1 "BUNDLED WITH" Gemfile.lock | sed -n 2p | tr -d ' ') && gem install bundler --version "${bundler_version}"
+  - gem --version
+  - gem list bundler
+
+before_script:
+  - psql -c 'create database service_purchase_test;' -U postgres
+
+script:
+  - RACK_ENV=test bundle exec rake db:migrate --trace
+  - "bundle exec bundle-audit update && bundle exec bundle-audit check"
+  - TZ=Pacific/Auckland bundle exec rspec spec --backtrace
+
+# GEMFILE.LOCK BITS
+
+GIT
+  remote: https://github.com/pond/sdoc.git
+  revision: e1e35566f9f207bffb3511fea4779629de94d029
+  branch: master
+  specs:
+    sdoc (1.0.1)
+      json
+      rdoc (>= 50)
+
+GIT
+  remote: https://5796e8aedd3c1cd3f5500aa21139cdf6f83f2bed:x-oauth-basic@github.com/LoyaltyNZ/loyalty_platform_support.git
+  revision: b31d09511e38ccc62ea5b05db4c23c7194f5d187
+  branch: master
+  specs:
+    loyalty_platform_support (3.5.4)
+      hoodoo (>= 1.12, < 3.0)
+
+# DOCKERFILE BITS
+
+# The "-stretch" suffix is to deal with:
+#
+#   https://trello.com/c/G4Ud3pT4/226-install-curl-latest-version-on-all-base-images
+#
+# ...and should probably be removed, along with this comment, whenever the
+# Ruby base version is next updated.
+#
+FROM quay.io/loyalty_nz/service_base_ruby:2.5.1-stretch
+
+MAINTAINER Loyalty Developers <developers@loyalty.co.nz>
+
+COPY ./Gemfile* /www/
+RUN bundle install --deployment --without development test
+
+ADD . /www
+
+# Run Bundler
+
+CMD bundle exec rackup -s alchemy
+
+
+Thoughts for ER:
+
+[for x in aws_instance.example: x.id if x.availability_zone == "us-east-1a"]
+
+locals {
+  # flatten ensures that this local value is a flat list of objects, rather
+  # than a list of lists of objects.
+  network_subnets = flatten([
+    for network_key, network in var.networks : [
+      for subnet_key, subnet in network.subnets : {
+        network_key = network_key
+        subnet_key  = subnet_key
+        network_id  = aws_vpc.example[network_key].id
+        cidr_block  = subnet.cidr_block
+      }
+    ]
+  ])
+}
+
+resource "aws_subnet" "example" {
+  # local.network_subnets is a list, so we must now project it into a map
+  # where each key is unique. We'll combine the network and subnet keys to
+  # produce a single unique key per instance.
+  for_each = {
+    for subnet in local.network_subnets : "${subnet.network_key}.${subnet.subnet_key}" => subnet
+  }
+
+  vpc_id            = each.value.network_id
+  availability_zone = each.value.subnet_key
+  cidr_block        = each.value.cidr_block
+}
+
+Notes for Handover:
+
+- infrastructure and configuration are co-mingled: more flexible to have configuration separate
+- keys are stored in source code *everywhere*
+- secrets management can be emphasized
+- TerraformCloud is more of a hindrance than a help
+- DevOps preso
+- Introduce 'Architectural Decision' process: template below -- new ideas much be presented with other optons considered and pros/cons
+
+Confluence Page:
+https://loyaltynz.atlassian.net/wiki/spaces/TECH/pages/848297985/Architectural+Decision+Template
+* attach example PDF
+
+NOTES FOR JEREMY:
+
+Migraton of platform POC from NeuralEssence environment to Loyalty: several changes added work items that were not expected
+* VPC using exisitng code caused EKS not to function
+* EKS built with exisitng code
+* Charts deployed via Terraform rather than command-line
+* Jenkins pipelines require a DB (postgres), was not part of the original plan
+
+
+
+NOTES for SUMMARY:
+
+Recommendations:
+* review tips and tricks for minimizing size of Docker iamges -- many of these are bigger than they need to be
+
+
+
+Hi Natasha and Mike,
+
+We are looking at consolidating and simplifying the CI/CD processes at Loyalty to allow more flexibility to developers and expand our current capabilities.  As a 'first cab off the rank' I've selected the 'service_fly_buys_programme' build to migrate to Jenkins for comparison/contrast.  I'd like to ask your help in reverse-engineering what TravisCI & Quay.io are doing into a sequential set of steps with any dependencies and other 'Travis Magic' identified.
+
+What I've come up with so far is:
+
+1) clone codebase
+2) run 'before-install' steps
+3) ? is something done for 'install' phase?
+4) create and populate a temp database (using Travis default Postgress) in 'before-script' steps
+5) execute 'script' steps
+6) hand over to Quay.io to build/tag/push Docker image
+
+Couple of questions:
+* is there anything missing that either TravisCI ro Quay.ip 'do for you' that isn't obvious?
+* is the database that gets created a throw-away used only for testing?
+* where does the tag come from that gets applied to the Docker iamge?
+* does the 'loyalty_base_ruby' Dockedr image have tools to build as well as run the app (could simplify the Jenkins pipeline)?
+* does Loyalty run all containers as 'root' user?
+
+
+~/domains/neuralessence.com/uploads/Abundance_Email-06-Dec-2020.tgz
+
+COMMANDS for MOUNTING AN ACCESS POINT:
+sudo yum install -y amazon-efs-utils
+sudo mount -t efs -o tls,accesspoint=[access-point-id] [file-system-id]: /[local mount point]
+sudo mount -t efs -o tls,accesspoint=fsap-0b2ff1d26ae0ca2a1 fs-920cabaa: /jenkins-dev-home
+
+WITHOUT EFS MOUNT HELPER:
+sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport [file-system-id].efs.[aws-region].amazonaws.com:/ [efs-mount-point/]
+sudo mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-920cabaa.efs.ap-southeast-2.amazonaws.com:/ eks-test/
+
+DOMAIN: loyaltydevops.co.nz
+
+CHECKLIST to ADD TO DEVOPS EKS CLUSTER:
+* Log Group (CloudWatch)
+* What order to install add-ons?  Helm deploys?
+* Add CloudWatch Logging (need lambda)
+
+QUESTIONS FOR DEVOPS EKS CLUSTER:
+* eks_public_access_cidrs?  Set to 0.0.0.0./0?
+* where do eks_worker_public_key come from?
+* How robust do these worker groups need to be?
+
+git push -u origin <branch>
+
+Notes:
+
+* Backend config for Terraform if running locally
+
+bucket               = "loyaltynz-terraform-state"
+region               = "ap-southeast-2"
+dynamodb_table       = "terraform-statelock"
+workspace_key_prefix = "workspace"
+
+https://s3.console.aws.amazon.com/s3/buckets/loyaltynz-terraform-state?region=ap-southeast-2 in the main account
+
+data "aws_vpc" "eks" {
+  filter {
+    name   = "tag:Name"
+    values = ["${terraform.workspace}"]
+  }
+}
+
+That’s an example. Official doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc
+
+resource "aws_security_group" "eks_control_plane" {
+  name        = "${terraform.workspace} - EKS Control Plane SG"
+  description = "${terraform.workspace} EKS control plane security group"
+  vpc_id      = "${data.aws_vpc.kubernetes_vpc.id}"
+
+  tags = "${merge(
+            local.tags,
+            map(
+              "Name", "${terraform.workspace}-eks-control-plane-sg",
+              )
+            )
+          }"
+}
+
+## This stack depends on the vpc terraform stack being created first.
+# This file loads the required AWS resources created by that stack
+
+data "aws_vpc" "kubernetes_vpc" {
+  tags = {
+    Name       = "${terraform.workspace}"
+    managed-by = "terraform"
+  }
+}
+
+data "aws_subnet_ids" "eks_private" {
+  vpc_id = "${data.aws_vpc.kubernetes_vpc.id}"
+
+  tags = {
+    Name = "${terraform.workspace} - Private"
+  }
+}
+
+data "aws_subnet_ids" "eks_public" {
+  vpc_id = "${data.aws_vpc.kubernetes_vpc.id}"
+
+  tags = {
+    Name = "${terraformworkspace} - Public"
+  }
+}

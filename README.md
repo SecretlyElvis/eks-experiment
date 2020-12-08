@@ -109,7 +109,16 @@ _Note: additional configuration parameters can be found here: https://github.com
 
 `kubectl get deployment -n kube-system aws-load-balancer-controller`
 
-6. **Deploy Jenkins (Charts)**
+6. **Deploy PostgreSQL (Charts)**
+
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install postgresql bitnami/postgresql
+```
+
+Parameters: https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart
+
+7. **Deploy Jenkins (Charts)**
 
 - Create a namespace for Jenkins DEV components:
 
@@ -157,7 +166,7 @@ secret=$(kubectl get secret -n jenkins-dev jenkins-dev -o jsonpath=$path)
 echo $(echo $secret | base64 -d)
 ```
 
-7. **Deploy Nexus (YAML)**
+8. **Deploy Nexus (YAML)**
 
 - Create a namespace for Nexus PRD components:
 

@@ -113,10 +113,13 @@ _Note: additional configuration parameters can be found here: https://github.com
 
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install postgresql bitnami/postgresql
+helm install postgresql-test \
+  --set postgresqlPassword="test",postgresqlDatabase=my-database \
+    bitnami/postgresql
 ```
 
 Parameters: https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart
+Pod-to-Pod Communication: https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
 
 7. **Deploy Jenkins (Charts)**
 

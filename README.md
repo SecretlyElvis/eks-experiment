@@ -114,7 +114,7 @@ _Note: additional configuration parameters can be found here: https://github.com
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install postgresql-test \
-  --set postgresqlPassword="test" \
+  --set postgresqlPassword="t" \
     bitnami/postgresql
 ```
 
@@ -122,9 +122,6 @@ Parameters: https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#in
 Pod-to-Pod Communication: https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
 
 Connecting to the DB:
-
-NOTES:
-** Please be patient while the chart is being deployed **
 
 PostgreSQL can be accessed via port 5432 on the following DNS name from within your cluster:
 

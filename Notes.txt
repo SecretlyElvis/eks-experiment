@@ -119,6 +119,9 @@ Setting for 'ingress.path' can be changed in otemo chart (need to find out how t
 
 #### RESOURCES ####
 
+-- Pod-to-pod communication in Kubernetes:
+https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
+
 -- Ingress Controllers 101 (HAProxy):
 https://thenewstack.io/kubernetes-ingress-for-beginners/
 

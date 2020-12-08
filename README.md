@@ -111,15 +111,17 @@ _Note: additional configuration parameters can be found here: https://github.com
 
 6. **Deploy PostgreSQL (Charts)**
 
+Creates a passwordless database for use in deployment test activities.
+
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
 helm install postgresql-test \
-  --set postgresqlPassword="t" \
-    bitnami/postgresql
+  --set pgHbaConfiguration="host    all postgres    0.0.0.0/0   trust" \
+  bitnami/postgresql
 ```
 
-Parameters: https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart
-Pod-to-Pod Communication: https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
+_Note: additional configuration parameters can be found here: https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart_
 
 Connecting to the DB:
 

@@ -114,12 +114,34 @@ _Note: additional configuration parameters can be found here: https://github.com
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install postgresql-test \
-  --set postgresqlPassword="test",postgresqlDatabase=my-database \
+  --set postgresqlPassword="test" \
     bitnami/postgresql
 ```
 
 Parameters: https://github.com/bitnami/charts/tree/master/bitnami/postgresql/#installing-the-chart
 Pod-to-Pod Communication: https://kubernetes.io/docs/tasks/run-application/run-single-instance-stateful-application/
+
+Connecting to the DB:
+
+NOTES:
+** Please be patient while the chart is being deployed **
+
+PostgreSQL can be accessed via port 5432 on the following DNS name from within your cluster:
+
+    postgresql-test.default.svc.cluster.local - Read/Write connection
+
+To get the password for "postgres" run:
+
+    export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgresql-test -o jsonpath="{.data.postgresql-password}" | base64 -d)
+
+To connect to your database run the following command:
+
+    kubectl run postgresql-test-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.10.0-debian-10-r24 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgresql-test -U postgres -d postgres -p 5432
+
+To connect to your database from outside the cluster execute the following commands:
+
+    kubectl port-forward --namespace default svc/postgresql-test 5432:5432 &
+    PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432
 
 7. **Deploy Jenkins (Charts)**
 

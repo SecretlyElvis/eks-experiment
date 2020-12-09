@@ -275,7 +275,7 @@ GIT
       rdoc (>= 50)
 
 GIT
-  remote: https://5796e8aedd3c1cd3f5500aa21139cdf6f83f2bed:x-oauth-basic@github.com/LoyaltyNZ/loyalty_platform_support.git
+  remote: https://[token]@github.com/LoyaltyNZ/loyalty_platform_support.git
   revision: b31d09511e38ccc62ea5b05db4c23c7194f5d187
   branch: master
   specs:
